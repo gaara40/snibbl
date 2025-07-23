@@ -16,13 +16,13 @@ class SocialLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 80,
-        height: 80,
+        width: 100,
+        height: 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppTheme.secondaryColor,
         ),
-        child: Center(child: Image.asset(logoAssetPath, height: 60)),
+        child: Center(child: Image.asset(logoAssetPath, height: 65)),
       ),
     );
   }

@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppTheme.surfaceColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -31,15 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 //LOGO
                 SizedBox(
-                  height: 180,
+                  height: 200,
                   child: Center(
                     child: Image.asset(
                       AppAssets.appNameLogo,
-                      fit: BoxFit.fitHeight,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
 
                 //WELCOME BACK MESSAGE
                 Text(

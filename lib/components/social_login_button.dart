@@ -16,8 +16,8 @@ class SocialLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 100,
-        height: 100,
+        width: 90,
+        height: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppTheme.secondaryColor,

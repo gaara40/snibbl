@@ -1,21 +1,18 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:storygram/components/social_login_button.dart';
 import 'package:storygram/constants/assets.dart';
 import 'package:storygram/providers/auth_providers.dart';
-import 'package:storygram/services/auth_services.dart';
 import 'package:storygram/themes/app_theme.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends ConsumerStatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   bool _loading = false;
@@ -31,9 +28,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    FocusScope.of(context).unfocus();
-
+  void _handleSignUp() async {
     if (!_formKey.currentState!.validate()) {
       Fluttertoast.showToast(
         msg: 'Please try again',
@@ -51,20 +46,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final auth = ref.read(authServiceProvider);
 
     try {
-      await auth.logInWithEmail(
+      await auth.signUpWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
-      if (mounted) {
-        final email = auth.currentUserEmail();
-        Fluttertoast.showToast(
-          msg: 'Welcome $email',
-          backgroundColor: AppTheme.primaryColor,
-        );
-      }
+      //logging out user immediately to force login
+      await auth.signOut();
+
+      Fluttertoast.showToast(
+        msg: 'SignIn Successful. Please Login',
+        backgroundColor: AppTheme.primaryColor,
+      );
 
       await Future.delayed(Duration(seconds: 2));
+
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/loginScreen',
+          (route) => false,
+        );
+      }
     } catch (e) {
       if (mounted) {
         final errorMessage =
@@ -87,7 +90,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppTheme.surfaceColor,
@@ -112,12 +114,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 //WELCOME BACK MESSAGE
                 Text(
-                  'Welcome Back 👋',
+                  'Let’s get started 🚀',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                 ),
+
                 SizedBox(height: 18),
                 Form(
                   key: _formKey,
@@ -210,32 +213,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 28),
 
-                      //FORGOT PASSWORD
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              // goto forgot password screen
-                              Navigator.pushNamed(context, '/forgotPwdScreen');
-                            },
-                            child: Text(
-                              'Forgot Password?',
-                              style: theme.textTheme.displaySmall?.copyWith(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      //LOGIN BUTTON
+                      //SIGNUP BUTTON
                       SizedBox(
                         width: double.infinity,
                         height: 60,
@@ -251,9 +231,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  onPressed: _handleLogin,
+                                  onPressed: () {
+                                    _handleSignUp();
+                                  },
                                   child: Text(
-                                    'Login',
+                                    'Signup',
                                     style: theme.textTheme.bodyLarge?.copyWith(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -262,133 +244,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                       ),
                     ],
-                  ),
-                ),
-
-                SizedBox(height: 18),
-
-                //CONTINUE AS GUEST TEXT
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        text: "Continue as a ",
-                        style: theme.textTheme.displaySmall?.copyWith(
-                          fontSize: 14,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "Guest",
-                            recognizer:
-                                TapGestureRecognizer()
-                                  ..onTap = () {
-                                    //goto guest screen/ home screen
-                                  },
-                            style: theme.textTheme.displayMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // SizedBox(width: 6),
-                    // Tooltip(
-                    //   message:
-                    //       "As readers, guest users can enjoy and like posts. Creating or saving posts requires an account.",
-                    //   child: Icon(Icons.info_outline, size: 14),
-                    // ),
-                  ],
-                ),
-
-                SizedBox(height: 18),
-
-                //DIVIDER
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        'OR',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 20),
-
-                //social logins
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    //GOOGLE SIGN-IN
-                    SocialLoginButton(
-                      logoAssetPath: AppAssets.googleLogo,
-                      onTap: () {
-                        //google sign-in method
-                        AuthServices().signInWithGoogle();
-                      },
-                    ),
-
-                    SizedBox(width: 18),
-                  ],
-                ),
-
-                SizedBox(height: 80),
-
-                //NEW USER SIGNUP
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 18),
-                  child: Center(
-                    child: Text.rich(
-                      TextSpan(
-                        text: "Don't have an account? ",
-                        style: theme.textTheme.displaySmall?.copyWith(
-                          fontSize: 14,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'Signup',
-                            style: theme.textTheme.displayMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer:
-                                TapGestureRecognizer()
-                                  ..onTap = () {
-                                    //goto Signup Screen
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/signUpScreen',
-                                    );
-                                  },
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 ),
               ],

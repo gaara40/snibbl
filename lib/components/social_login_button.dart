@@ -16,13 +16,25 @@ class SocialLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 90,
-        height: 90,
+        height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppTheme.secondaryColor,
         ),
-        child: Center(child: Image.asset(logoAssetPath, height: 65)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Center(
+            child: Row(
+              children: [
+                Image.asset(logoAssetPath),
+                Text(
+                  'Sign in with Google',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/loginScreen',
+        '/authGate',
         (routes) => false,
       );
     });

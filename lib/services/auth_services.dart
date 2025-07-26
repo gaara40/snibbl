@@ -1,9 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
   final _auth = FirebaseAuth.instance;
 
+  //current user email
+  currentUserEmail() {
+    return _auth.currentUser!.email;
+  }
+
+  //signup with email and password
   Future<UserCredential?> signUpWithEmail(String email, String password) async {
     try {
       final userCred = await _auth.createUserWithEmailAndPassword(
@@ -12,10 +19,11 @@ class AuthServices {
       );
       return userCred;
     } on FirebaseAuthException catch (e) {
-      throw Exception(_handleFirebaseError(e));
+      throw Exception(_handleFirebaseLoginError(e));
     }
   }
 
+  //login with email and password
   Future<UserCredential?> logInWithEmail(String email, String password) async {
     try {
       final userCred = await _auth.signInWithEmailAndPassword(
@@ -24,11 +32,36 @@ class AuthServices {
       );
       return userCred;
     } on FirebaseAuthException catch (e) {
-      throw Exception(_handleFirebaseError(e));
+      throw Exception(_handleFirebaseLoginError(e));
     }
   }
 
-  Exception _handleFirebaseError(FirebaseAuthException e) {
+  //Google Sign-in
+  signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    if (googleUser == null) return;
+
+    final GoogleSignInAuthentication gAuth = await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken,
+    );
+
+    return await _auth.signInWithCredential(credential);
+  }
+
+  //reset password
+  Future<void> forgotPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  Exception _handleFirebaseLoginError(FirebaseAuthException e) {
     debugPrint('Firebase error code: ${e.code}');
     switch (e.code) {
       case 'invalid-email':
@@ -60,5 +93,6 @@ class AuthServices {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    await GoogleSignIn().signOut();
   }
 }

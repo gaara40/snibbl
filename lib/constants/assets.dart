@@ -4,7 +4,4 @@ class AppAssets {
 
   //google logo
   static const String googleLogo = 'assets/images/google_logo.png';
-
-  //apple logo
-  static const String appleLogo = 'assets/images/apple_logo.png';
 }

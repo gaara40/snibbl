@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,24 +94,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     final navigator = Navigator.of(context);
-    final auth = ref.read(authServiceProvider);
+    final authServices = ref.read(authServiceProvider);
 
-    final success = await auth.continueAsGuest();
-
-    if (!mounted) return;
+    final success = await authServices.continueAsGuest();
 
     if (success) {
-      Fluttertoast.showToast(
-        msg: 'Logging in as ${auth.guestDisplayName()}',
-        toastLength: Toast.LENGTH_SHORT,
-      );
+      await Future.delayed(Duration(milliseconds: 1000));
+      await FirebaseAuth.instance.currentUser?.reload(); // Force reload again
 
-      // Waiting before navigating
-      await Future.delayed(Duration(milliseconds: 3000));
+      final updatedName = FirebaseAuth.instance.currentUser?.displayName;
+      debugPrint('Navigating with display name: $updatedName');
 
-      if (mounted) {
-        navigator.pushNamedAndRemoveUntil('/homeScreen', (route) => false);
-      }
+      navigator.pushNamedAndRemoveUntil('/homeScreen', (route) => false);
     } else {
       setState(() {
         _guestLoading = false;

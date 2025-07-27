@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/firebase_authentication/auth_gate.dart';
 import 'package:storygram/firebase_options.dart';
 import 'package:storygram/screens/forgot_pwd_screen.dart';
+import 'package:storygram/screens/home_screen.dart';
 import 'package:storygram/screens/login_screen.dart';
 import 'package:storygram/screens/signup_screen.dart';
 import 'package:storygram/screens/splash_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/loginScreen': (context) => const LoginScreen(),
         '/signUpScreen': (context) => const SignupScreen(),
         '/forgotPwdScreen': (context) => const ForgotPwdScreen(),
+        '/homeScreen': (context) => const HomeScreen(),
       },
       themeMode: ThemeMode.light,
       theme: AppTheme.lightTheme,

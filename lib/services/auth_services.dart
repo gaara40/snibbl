@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
@@ -8,6 +9,11 @@ class AuthServices {
   //current user email
   currentUserEmail() {
     return _auth.currentUser!.email;
+  }
+
+  //current guest user display name
+  guestDisplayName() {
+    return _auth.currentUser!.displayName;
   }
 
   //signup with email and password
@@ -61,6 +67,40 @@ class AuthServices {
     }
   }
 
+  //Sign out
+  Future<void> signOut() async {
+    await _auth.signOut();
+    await GoogleSignIn().signOut();
+  }
+
+  //Continue as guest
+  Future<bool> continueAsGuest() async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInAnonymously();
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        if (user.displayName == null || user.displayName!.isEmpty) {
+          final guestDisplayName = 'guest${user.uid.substring(0, 5)}';
+
+          await user.updateDisplayName(guestDisplayName);
+          await user.reload();
+          user = _auth.currentUser;
+        }
+
+        debugPrint('Signed in as ${user?.displayName}');
+        return true;
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Guest sign-in failed: $e');
+      debugPrint('Guest sign-in failed : $e');
+    }
+    return false;
+  }
+
+  //handle exception errors
   Exception _handleFirebaseLoginError(FirebaseAuthException e) {
     debugPrint('Firebase error code: ${e.code}');
     switch (e.code) {
@@ -89,10 +129,5 @@ class AuthServices {
       default:
         return Exception('Something went wrong. Please try again.');
     }
-  }
-
-  Future<void> signOut() async {
-    await _auth.signOut();
-    await GoogleSignIn().signOut();
   }
 }

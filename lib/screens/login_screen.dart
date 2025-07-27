@@ -19,6 +19,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   bool _loading = false;
+  bool _guestLoading = false;
 
   //controllers
   final _emailController = TextEditingController();
@@ -31,6 +32,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  //handle login
   Future<void> _handleLogin() async {
     FocusScope.of(context).unfocus();
 
@@ -80,6 +82,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } finally {
       setState(() {
         _loading = false;
+      });
+    }
+  }
+
+  //handle guest login
+  Future<void> _handleGuestLogin() async {
+    setState(() {
+      _guestLoading = true;
+    });
+
+    final navigator = Navigator.of(context);
+    final auth = ref.read(authServiceProvider);
+
+    final success = await auth.continueAsGuest();
+
+    if (!mounted) return;
+
+    if (success) {
+      Fluttertoast.showToast(
+        msg: 'Logging in as ${auth.guestDisplayName()}',
+        toastLength: Toast.LENGTH_SHORT,
+      );
+
+      // Waiting before navigating
+      await Future.delayed(Duration(milliseconds: 3000));
+
+      if (mounted) {
+        navigator.pushNamedAndRemoveUntil('/homeScreen', (route) => false);
+      }
+    } else {
+      setState(() {
+        _guestLoading = false;
       });
     }
   }
@@ -271,29 +305,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text.rich(
-                      TextSpan(
-                        text: "Continue as a ",
-                        style: theme.textTheme.displaySmall?.copyWith(
-                          fontSize: 14,
-                        ),
-                        children: [
+                    _guestLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : Text.rich(
                           TextSpan(
-                            text: "Guest",
-                            recognizer:
-                                TapGestureRecognizer()
-                                  ..onTap = () {
-                                    //goto guest screen/ home screen
-                                  },
-                            style: theme.textTheme.displayMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
+                            text: "Continue as a ",
+                            style: theme.textTheme.displaySmall?.copyWith(
+                              fontSize: 14,
                             ),
+                            children: [
+                              TextSpan(
+                                text: "Guest",
+                                recognizer:
+                                    TapGestureRecognizer()
+                                      ..onTap = _handleGuestLogin,
+                                style: theme.textTheme.displayMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
                     // SizedBox(width: 6),
                     // Tooltip(
                     //   message:

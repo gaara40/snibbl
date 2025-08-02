@@ -2,27 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:storygram/constants/assets.dart';
 import 'package:storygram/themes/app_theme.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(Duration(seconds: 2), () {
-      if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/authGate',
-        (routes) => false,
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

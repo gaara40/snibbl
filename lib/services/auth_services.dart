@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:storygram/helpers/toasts.dart';
+import 'package:storygram/themes/app_theme.dart';
 
 class AuthServices {
   final _auth = FirebaseAuth.instance;
@@ -8,11 +11,6 @@ class AuthServices {
   //current user email
   currentUserEmail() {
     return _auth.currentUser!.email;
-  }
-
-  //current guest user display name
-  guestDisplayName() {
-    return _auth.currentUser!.displayName;
   }
 
   //signup with email and password
@@ -24,7 +22,7 @@ class AuthServices {
       );
       return userCred;
     } on FirebaseAuthException catch (e) {
-      throw Exception(_handleFirebaseLoginError(e));
+      throw _handleFirebaseLoginError(e);
     }
   }
 
@@ -37,7 +35,7 @@ class AuthServices {
       );
       return userCred;
     } on FirebaseAuthException catch (e) {
-      throw Exception(_handleFirebaseLoginError(e));
+      throw _handleFirebaseLoginError(e);
     }
   }
 
@@ -68,36 +66,52 @@ class AuthServices {
 
   //Sign out
   Future<void> signOut() async {
-    await _auth.signOut();
-    await GoogleSignIn().signOut();
+    final user = _auth.currentUser;
+
+    try {
+      if (user != null && user.isAnonymous) {
+        //delete anonymous user's
+        await user.delete();
+        debugPrint('Anonymous user deleted');
+      }
+
+      await _auth.signOut();
+      await GoogleSignIn().signOut();
+
+      //show success toast
+      Fluttertoast.showToast(
+        msg: 'Signed out successfully',
+        backgroundColor: AppTheme.primaryColor,
+      );
+    } catch (e) {
+      debugPrint('Error during sign out: $e');
+      showToast('Failed to sign out: ${e.toString()}');
+    }
   }
 
-  //Continue as guest
-  Future<bool> continueAsGuest() async {
+  //Guest Login
+  Future<UserCredential?> continueAsGuest() async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInAnonymously();
+      final userCred = await FirebaseAuth.instance.signInAnonymously();
 
-      User? user = userCredential.user;
+      var user = userCred.user;
 
       if (user != null) {
-        if (user.displayName == null || user.displayName!.isEmpty) {
-          final guestDisplayName = 'guest${user.uid.substring(0, 5)}';
+        //generating guest username
+        final guestDisplayName =
+            'guest${user.uid.substring(user.uid.length - 4)}';
 
+        //checking if there's any username and setting the generated username
+        if (user.displayName == null || user.displayName!.isEmpty) {
           await user.updateDisplayName(guestDisplayName);
           await user.reload();
-          user = _auth.currentUser;
         }
-
-        debugPrint('Signed in as ${user?.displayName}');
-        return true;
       }
-    } catch (e) {
-      throw Exception(e);
-      // Fluttertoast.showToast(msg: 'Guest sign-in failed: $e');
-      // debugPrint('Guest sign-in failed : $e');
+
+      return userCred;
+    } on FirebaseAuthException catch (e) {
+      throw _handleFirebaseLoginError(e);
     }
-    return false;
   }
 }
 

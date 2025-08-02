@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/firebase_authentication/auth_gate.dart';
 import 'package:storygram/firebase_options.dart';
+import 'package:storygram/launcher/splash_launcher.dart';
 import 'package:storygram/screens/forgot_pwd_screen.dart';
 import 'package:storygram/screens/home_screen.dart';
 import 'package:storygram/screens/login_screen.dart';
 import 'package:storygram/screens/signup_screen.dart';
-import 'package:storygram/screens/splash_screen.dart';
 import 'package:storygram/themes/app_theme.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,9 +24,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       initialRoute: '/',
       routes: {
-        '/': (context) => const SplashScreen(),
+        '/': (context) => const Splashlauncher(),
         '/authGate': (context) => AuthGate(),
         '/loginScreen': (context) => const LoginScreen(),
         '/signUpScreen': (context) => const SignupScreen(),

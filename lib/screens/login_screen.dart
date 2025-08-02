@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:storygram/components/social_login_button.dart';
 import 'package:storygram/constants/assets.dart';
+import 'package:storygram/main.dart';
 import 'package:storygram/providers/auth_providers.dart';
 import 'package:storygram/services/auth_services.dart';
 import 'package:storygram/themes/app_theme.dart';
@@ -89,27 +90,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   //handle guest login
   Future<void> _handleGuestLogin() async {
-    setState(() {
-      _guestLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _guestLoading = true;
+      });
+    }
 
-    final navigator = Navigator.of(context);
     final authServices = ref.read(authServiceProvider);
 
-    final success = await authServices.continueAsGuest();
+    try {
+      //try logging in as guest
+      final userCred = await authServices.continueAsGuest();
 
-    if (success) {
-      await Future.delayed(Duration(milliseconds: 1000));
-      await FirebaseAuth.instance.currentUser?.reload(); // Force reload again
-
-      final updatedName = FirebaseAuth.instance.currentUser?.displayName;
-      debugPrint('Navigating with display name: $updatedName');
-
-      navigator.pushNamedAndRemoveUntil('/homeScreen', (route) => false);
-    } else {
-      setState(() {
-        _guestLoading = false;
-      });
+      if (userCred != null && userCred.user != null) {
+        final currentUser = FirebaseAuth.instance.currentUser;
+        final currentUserUid = currentUser?.displayName;
+        final displayName = currentUserUid.toString();
+        debugPrint('Signed in as $displayName');
+        if (!mounted) return;
+        Fluttertoast.showToast(msg: 'Signed in as $displayName');
+        navigatorKey.currentState!.pushNamedAndRemoveUntil(
+          '/homeScreen',
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      //show firebase errors
+      if (mounted) {
+        final errorMessage = e.toString().replaceFirst('Exception:', '');
+        Fluttertoast.showToast(
+          msg: errorMessage,
+          backgroundColor: AppTheme.primaryColor,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _guestLoading = false;
+        });
+      }
     }
   }
 
@@ -301,7 +320,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _guestLoading
-                        ? Center(child: CircularProgressIndicator())
+                        ? Center(
+                          child: Column(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(height: 10),
+                              Text('Signing you as a guest...'),
+                            ],
+                          ),
+                        )
                         : Text.rich(
                           TextSpan(
                             text: "Continue as a ",

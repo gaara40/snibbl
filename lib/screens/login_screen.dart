@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:storygram/components/social_login_button.dart';
 import 'package:storygram/constants/assets.dart';
+import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/providers/auth_providers.dart';
 import 'package:storygram/services/auth_services.dart';
@@ -39,10 +39,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     FocusScope.of(context).unfocus();
 
     if (!_formKey.currentState!.validate()) {
-      Fluttertoast.showToast(
-        msg: 'Please try again',
-        backgroundColor: AppTheme.primaryColor,
-      );
+      showToast('Please try again');
       return;
     }
 
@@ -62,10 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       if (mounted) {
         final email = auth.currentUserEmail();
-        Fluttertoast.showToast(
-          msg: 'Welcome $email',
-          backgroundColor: AppTheme.primaryColor,
-        );
+        showToast('Welcome $email');
       }
 
       await Future.delayed(Duration(seconds: 2));
@@ -76,10 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ? e.toString().replaceFirst('Exception: ', '')
                 : e.toString();
 
-        Fluttertoast.showToast(
-          msg: errorMessage,
-          backgroundColor: AppTheme.primaryColor,
-        );
+        showToast(errorMessage);
       }
     } finally {
       setState(() {
@@ -108,7 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         final displayName = currentUserUid.toString();
         debugPrint('Signed in as $displayName');
         if (!mounted) return;
-        Fluttertoast.showToast(msg: 'Signed in as $displayName');
+        showToast('Signed in as $displayName');
         navigatorKey.currentState!.pushNamedAndRemoveUntil(
           '/homeScreen',
           (route) => false,
@@ -118,10 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       //show firebase errors
       if (mounted) {
         final errorMessage = e.toString().replaceFirst('Exception:', '');
-        Fluttertoast.showToast(
-          msg: errorMessage,
-          backgroundColor: AppTheme.primaryColor,
-        );
+        showToast(errorMessage);
       }
     } finally {
       if (mounted) {

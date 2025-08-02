@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:storygram/helpers/toasts.dart';
-import 'package:storygram/themes/app_theme.dart';
 
 class AuthServices {
   final _auth = FirebaseAuth.instance;
@@ -79,10 +78,7 @@ class AuthServices {
       await GoogleSignIn().signOut();
 
       //show success toast
-      Fluttertoast.showToast(
-        msg: 'Signed out successfully',
-        backgroundColor: AppTheme.primaryColor,
-      );
+      showToast('Signed out successfully');
     } catch (e) {
       debugPrint('Error during sign out: $e');
       showToast('Failed to sign out: ${e.toString()}');

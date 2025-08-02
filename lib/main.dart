@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storygram/firebase_authentication/auth_gate.dart';
 import 'package:storygram/firebase_options.dart';
 import 'package:storygram/launcher/splash_launcher.dart';
 import 'package:storygram/screens/forgot_pwd_screen.dart';
@@ -28,7 +27,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Splashlauncher(),
-        '/authGate': (context) => AuthGate(),
         '/loginScreen': (context) => const LoginScreen(),
         '/signUpScreen': (context) => const SignupScreen(),
         '/forgotPwdScreen': (context) => const ForgotPwdScreen(),

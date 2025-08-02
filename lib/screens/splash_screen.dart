@@ -7,13 +7,29 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: AppTheme.surfaceColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Spacer(flex: 3),
-          Center(child: Image.asset(AppAssets.appNameLogo, width: 250)),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(AppAssets.appNameLogo, height: 100),
+                SizedBox(height: 12),
+                Text(
+                  'Poetry, in its smallest, softest form -a Snibbl',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
 
           Spacer(flex: 2),
           Center(child: CircularProgressIndicator()),

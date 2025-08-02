@@ -132,19 +132,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: 50),
                 //LOGO
                 SizedBox(
-                  height: 220,
-                  child: Center(
-                    child: Image.asset(
-                      AppAssets.appNameLogo,
-                      fit: BoxFit.cover,
+                  height: 150,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(AppAssets.appNameLogo, height: 80),
+                          SizedBox(height: 12),
+                          Text(
+                            'Poetry, in its smallest, softest form -a Snibbl',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
+
+                SizedBox(height: 40),
 
                 //WELCOME BACK MESSAGE
                 Text(

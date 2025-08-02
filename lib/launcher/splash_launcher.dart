@@ -15,7 +15,7 @@ class _SplashlauncherState extends State<Splashlauncher> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 3), () {
       if (!mounted) return;
       if (user == null) {
         navigatorKey.currentState!.pushNamedAndRemoveUntil(

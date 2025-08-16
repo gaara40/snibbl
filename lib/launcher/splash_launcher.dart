@@ -24,7 +24,7 @@ class _SplashlauncherState extends State<Splashlauncher> {
         );
       } else {
         navigatorKey.currentState!.pushNamedAndRemoveUntil(
-          '/homeScreen',
+          '/mainScreen',
           (route) => false,
         );
       }

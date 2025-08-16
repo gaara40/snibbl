@@ -115,7 +115,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (!mounted) return;
         showToast('Signed in as $displayName');
         navigatorKey.currentState!.pushNamedAndRemoveUntil(
-          '/homeScreen',
+          '/mainScreen',
           (route) => false,
         );
       }
@@ -146,7 +146,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           SizedBox.expand(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

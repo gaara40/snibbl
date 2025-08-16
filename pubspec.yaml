@@ -41,6 +41,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   fluttertoast: ^8.2.12
   google_sign_in: ^6.3.0
+  persistent_bottom_nav_bar: ^6.2.1
 
 dev_dependencies:
   flutter_test:

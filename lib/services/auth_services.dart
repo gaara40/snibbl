@@ -81,7 +81,6 @@ class AuthServices {
       showToast('Signed out successfully');
     } catch (e) {
       debugPrint('Error during sign out: $e');
-      showToast('Failed to sign out: ${e.toString()}');
     }
   }
 

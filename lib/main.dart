@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/firebase_options.dart';
 import 'package:storygram/launcher/splash_launcher.dart';
+import 'package:storygram/screens/activity_screen.dart';
 import 'package:storygram/screens/forgot_pwd_screen.dart';
 import 'package:storygram/screens/home_screen.dart';
 import 'package:storygram/screens/login_screen.dart';
+import 'package:storygram/screens/main_screen.dart';
+import 'package:storygram/screens/profile_screen.dart';
+import 'package:storygram/screens/search_explore_screen.dart';
 import 'package:storygram/screens/signup_screen.dart';
 import 'package:storygram/themes/app_theme.dart';
 
@@ -30,6 +34,10 @@ class MyApp extends StatelessWidget {
         '/loginScreen': (context) => const LoginScreen(),
         '/signUpScreen': (context) => const SignupScreen(),
         '/forgotPwdScreen': (context) => const ForgotPwdScreen(),
+        '/mainScreen': (context) => const MainScreen(),
+        '/searchExploreScreen': (context) => const SearchExploreScreen(),
+        '/activityScreen': (context) => const ActivityScreen(),
+        '/profileScreen': (context) => const ProfileScreen(),
         '/homeScreen': (context) => const HomeScreen(),
       },
       themeMode: ThemeMode.light,

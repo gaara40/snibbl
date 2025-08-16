@@ -37,7 +37,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   return;
                 }
                 await _authServices.signOut();
-                Fluttertoast.showToast(msg: 'Signed out successfully');
               } catch (e) {
                 Fluttertoast.showToast(msg: 'Error signing out: $e');
               }

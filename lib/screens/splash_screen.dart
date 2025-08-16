@@ -21,7 +21,7 @@ class SplashScreen extends StatelessWidget {
                 Image.asset(AppAssets.appNameLogo, height: 100),
                 SizedBox(height: 12),
                 Text(
-                  'Poetry, in its smallest, softest form -a Snibbl',
+                  'Poetry, in its smallest, softest form',
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,

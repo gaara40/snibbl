@@ -25,6 +25,7 @@ class SocialLoginButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Center(
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(logoAssetPath),
                 Text(
@@ -39,3 +40,10 @@ class SocialLoginButton extends StatelessWidget {
     );
   }
 }
+
+// SizedBox(width: 6),
+      // Tooltip(
+      //   message:
+      //       "As readers, guest users can enjoy posts. Interacting with posts requires a login.",
+      //   child: Icon(Icons.info_outline, size: 14),
+      // ),

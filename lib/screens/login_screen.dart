@@ -30,6 +30,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _loading = false;
   bool _guestLoading = false;
 
+  AuthServices get _authServices => ref.read(authServiceProvider);
+
   //controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -63,21 +65,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
     }
 
-    final auth = ref.read(authServiceProvider);
-
+    //try logging in
     try {
-      await auth.logInWithEmail(
+      final userCred = await _authServices.logInWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
-      if (mounted) {
-        final email = auth.currentUserEmail();
+      if (userCred != null && userCred.user != null) {
+        debugPrint('Logged in successfully');
+        if (!mounted) return;
+
+        final email = _authServices.currentUserEmail();
         showToast('Welcome $email');
       }
-
       await Future.delayed(Duration(seconds: 2));
+
+      navigatorKey.currentState!.pushNamedAndRemoveUntil(
+        '/mainScreen',
+        (route) => false,
+      );
     } catch (e) {
+      //catch firebase errors
       if (mounted) {
         final errorMessage =
             e is Exception
@@ -101,11 +110,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
     }
 
-    final authServices = ref.read(authServiceProvider);
-
     try {
       //try logging in as guest
-      final userCred = await authServices.continueAsGuest();
+      final userCred = await _authServices.continueAsGuest();
 
       if (userCred != null && userCred.user != null) {
         final currentUser = FirebaseAuth.instance.currentUser;
@@ -140,7 +147,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: AppTheme.surfaceColor,
       body: Stack(
         children: [
           SizedBox.expand(

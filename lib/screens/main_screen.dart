@@ -7,16 +7,28 @@ import 'package:storygram/screens/profile_screen.dart';
 import 'package:storygram/screens/search_explore_screen.dart';
 import 'package:storygram/themes/app_theme.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  late final PersistentTabController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = PersistentTabController(initialIndex: 0);
     return PersistentTabView(
       context,
-      controller: controller,
-      backgroundColor: AppTheme.secondaryColor,
+      controller: _controller,
+      backgroundColor: const Color.fromARGB(255, 254, 249, 220),
       screens: const [
         HomeScreen(),
         SearchExploreScreen(),
@@ -25,42 +37,51 @@ class MainScreen extends StatelessWidget {
         ProfileScreen(),
       ],
       items: [
+        //Home Tab
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.home),
+          icon: const Icon(Icons.home),
           title: 'Home',
           activeColorPrimary: AppTheme.inversePrimary,
           inactiveColorPrimary: AppTheme.primaryColor,
         ),
 
+        //Search Tab
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           title: 'Search',
           activeColorPrimary: AppTheme.inversePrimary,
           inactiveColorPrimary: AppTheme.primaryColor,
         ),
 
+        //Add Snibbl
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           title: 'Add Snibble',
           activeColorPrimary: AppTheme.inversePrimary,
           inactiveColorPrimary: AppTheme.primaryColor,
         ),
 
+        //Activity Tab
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.favorite),
+          icon: const Icon(Icons.favorite),
           title: 'Activity',
           activeColorPrimary: AppTheme.inversePrimary,
           inactiveColorPrimary: AppTheme.primaryColor,
         ),
 
+        //Profile Tab
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.person),
+          icon: const Icon(Icons.person),
           title: 'Profile',
           activeColorPrimary: AppTheme.inversePrimary,
           inactiveColorPrimary: AppTheme.primaryColor,
         ),
       ],
-      navBarStyle: NavBarStyle.style3,
+
+      navBarStyle: NavBarStyle.style13,
+      resizeToAvoidBottomInset: true, // let content resize
+      confineToSafeArea: true, // respect safe areas
+      stateManagement: true, // keep tab state
     );
   }
 }

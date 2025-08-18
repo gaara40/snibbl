@@ -11,7 +11,7 @@ class EmailTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-        fillColor: AppTheme.secondaryColor,
+        fillColor: AppTheme.tertiaryColor,
         filled: true,
         enabledBorder: UnderlineInputBorder(
           borderRadius: BorderRadius.circular(15),

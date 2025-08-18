@@ -19,7 +19,7 @@ class PasswordTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
-        fillColor: AppTheme.secondaryColor,
+        fillColor: AppTheme.tertiaryColor,
         filled: true,
         enabledBorder: UnderlineInputBorder(
           borderRadius: BorderRadius.circular(15),

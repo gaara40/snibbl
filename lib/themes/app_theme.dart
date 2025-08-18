@@ -15,6 +15,9 @@ class AppTheme {
   static const Color onSecondaryColor = Color(0xFF3E3325);
   static const Color surfaceColor = Color.fromARGB(255, 255, 251, 227);
 
+  //others
+  static const tertiaryColor = Color.fromARGB(255, 247, 220, 179);
+
   static final lightTheme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme(

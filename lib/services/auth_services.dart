@@ -5,17 +5,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:storygram/helpers/toasts.dart';
 
 class AuthServices {
-  final _auth = FirebaseAuth.instance;
+  final _firebaseAuth = FirebaseAuth.instance;
 
   //current user email
   currentUserEmail() {
-    return _auth.currentUser!.email;
+    return _firebaseAuth.currentUser!.email;
   }
 
   //signup with email and password
   Future<UserCredential?> signUpWithEmail(String email, String password) async {
     try {
-      final userCred = await _auth.createUserWithEmailAndPassword(
+      final userCred = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -28,7 +28,7 @@ class AuthServices {
   //login with email and password
   Future<UserCredential?> logInWithEmail(String email, String password) async {
     try {
-      final userCred = await _auth.signInWithEmailAndPassword(
+      final userCred = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -51,13 +51,13 @@ class AuthServices {
       idToken: gAuth.idToken,
     );
 
-    return await _auth.signInWithCredential(credential);
+    return await _firebaseAuth.signInWithCredential(credential);
   }
 
   //reset password
   Future<void> forgotPassword(String email) async {
     try {
-      await _auth.sendPasswordResetEmail(email: email);
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     }
@@ -65,7 +65,7 @@ class AuthServices {
 
   //Sign out
   Future<void> signOut() async {
-    final user = _auth.currentUser;
+    final user = _firebaseAuth.currentUser;
 
     try {
       if (user != null && user.isAnonymous) {
@@ -74,7 +74,7 @@ class AuthServices {
         debugPrint('Anonymous user deleted');
       }
 
-      await _auth.signOut();
+      await _firebaseAuth.signOut();
       await GoogleSignIn().signOut();
 
       //show success toast

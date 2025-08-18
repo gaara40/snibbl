@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:storygram/providers/auth_providers.dart';
-import 'package:storygram/screens/login_screen.dart';
-import 'package:storygram/services/auth_services.dart';
+import 'package:storygram/components/email_text_field.dart';
+import 'package:storygram/constants/assets.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -14,38 +11,59 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  AuthServices get _authServices => ref.read(authServiceProvider);
+  final _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final displayName = user?.displayName;
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () async {
-              try {
-                final user = FirebaseAuth.instance.currentUser;
-                if (user != null && user.isAnonymous) {
-                  await _authServices.signOut();
-                  if (!mounted) return;
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => LoginScreen()),
-                    (route) => false,
-                  );
-                  return;
-                }
-                await _authServices.signOut();
-              } catch (e) {
-                Fluttertoast.showToast(msg: 'Error signing out: $e');
-              }
-            },
-            icon: Icon(Icons.logout),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: SizedBox(
+                  height: 60,
+                  child: Image.asset(
+                    AppAssets.appNameLogo,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 15,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Icon(Icons.star),
+                      title: Text('Item: ${index + 1}'),
+                      subtitle: Text('This is the ${index + 1} item'),
+                      onTap:
+                          () => showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (_) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: EmailTextField(
+                                  controller: _emailController,
+                                ),
+                              );
+                            },
+                          ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-      body: Center(child: Text('Hello $displayName')),
     );
   }
 }

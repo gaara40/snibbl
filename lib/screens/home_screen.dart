@@ -17,20 +17,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 5),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: SizedBox(
-                  height: 60,
-                  child: Image.asset(
-                    AppAssets.appNameLogo,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+              SizedBox(
+                height: 50,
+                child: Image.asset(AppAssets.appNameLogo, fit: BoxFit.contain),
               ),
               Expanded(
                 child: ListView.builder(

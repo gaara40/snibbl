@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:storygram/widgets/text_editing_helper_divider.dart';
 
 Future<double?> showFontSizePicker(
   BuildContext context, {
-  required double currentSize,
-  double min = 10,
+  required double currentFontSize,
+  required String currentFontStyle,
+  double min = 12,
   double max = 48,
 }) {
   return showModalBottomSheet<double>(
     context: context,
-    showDragHandle: true,
+
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (ctx) {
       // local temp state that only lives inside the sheet
-      double temp = currentSize.clamp(min, max);
+      double temp = currentFontSize.clamp(min, max);
       final presets = <double>[12, 14, 16, 18, 20, 24, 28, 32, 36];
 
-      // StatefulBuilder lets the sheet re-render without creating a new widget class
       return StatefulBuilder(
         builder: (ctx, setSheet) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            padding: const EdgeInsets.fromLTRB(15, 30, 15, 15),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -38,16 +40,26 @@ Future<double?> showFontSizePicker(
                       ),
                     ),
                     const Spacer(),
-                    Text(temp.toStringAsFixed(0)),
+                    Text(
+                      temp.toStringAsFixed(0),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
 
-                const SizedBox(height: 12),
+                // Divider
+                TextEditingHelperDivider(),
 
                 // Live preview
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Preview Aa', style: TextStyle(fontSize: temp)),
+                  child: Text(
+                    'Preview Aa',
+                    style: GoogleFonts.getFont(
+                      currentFontStyle,
+                      fontSize: temp,
+                    ),
+                  ),
                 ),
 
                 // Slider

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storygram/components/email_text_field.dart';
+import 'package:storygram/widgets/email_text_field.dart';
 import 'package:storygram/constants/assets.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {

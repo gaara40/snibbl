@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:storygram/constants/assets.dart';
+import 'package:storygram/helpers/alignment_picker.dart';
+import 'package:storygram/helpers/font_style_picker.dart';
 import 'package:storygram/helpers/snibbl_hints.dart';
-import 'package:storygram/helpers/text_editing_helpers.dart';
+import 'package:storygram/helpers/font_size_picker.dart';
 import 'package:storygram/themes/app_theme.dart';
 
 class AddSnibblScreen extends StatefulWidget {
@@ -14,10 +17,13 @@ class AddSnibblScreen extends StatefulWidget {
 }
 
 class _AddSnibblScreenState extends State<AddSnibblScreen> {
+  double currentFontSize = 18;
+  String currentFontStyle = 'Poppins';
+  TextAlign currentTextAlignment = TextAlign.left;
+  bool isBold = false;
+
   @override
   Widget build(BuildContext context) {
-    double fontSize = 18;
-
     final Color boxColor = const Color.fromARGB(255, 247, 225, 192);
     final theme = Theme.of(context);
     return Scaffold(
@@ -48,15 +54,42 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                           Text(
                             'Add a Snibbl',
                             style: theme.textTheme.headlineLarge?.copyWith(
-                              fontSize: 30,
+                              fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            'Post',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(16),
+                                      ),
+                                    ),
+                                    title: Text('Hang on...'),
+                                    content: const Text(
+                                      'Post will be available in the next update.\n'
+                                      'Just giving it a little polish ✨',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(ctx),
+                                        child: const Text('Okay'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              'Post',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -83,6 +116,7 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                             child: TextField(
                               autocorrect: true,
                               maxLines: null,
+                              textAlign: currentTextAlignment,
                               keyboardType: TextInputType.multiline,
                               expands: true, // fills up the height of parent
 
@@ -101,9 +135,11 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                                 ),
                                 contentPadding: EdgeInsets.all(12),
                               ),
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w500,
+                              style: GoogleFonts.getFont(
+                                currentFontStyle,
+                                fontSize: currentFontSize,
+                                fontWeight:
+                                    isBold ? FontWeight.bold : FontWeight.w100,
                               ),
                             ),
                           ),
@@ -128,12 +164,13 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                                 onPressed: () async {
                                   final newSize = await showFontSizePicker(
                                     context,
-                                    currentSize: fontSize,
+                                    currentFontSize: currentFontSize,
+                                    currentFontStyle: currentFontStyle,
                                   );
 
                                   if (newSize != null && mounted) {
                                     setState(() {
-                                      fontSize = newSize;
+                                      currentFontSize = newSize;
                                     });
                                   }
                                 },
@@ -146,7 +183,19 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                                   color: AppTheme.onPrimaryColor,
                                   size: 30,
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  final selectedFontStyle =
+                                      await showFontStylePicker(
+                                        context,
+                                        currentFontStyle: currentFontStyle,
+                                      );
+
+                                  if (selectedFontStyle != null) {
+                                    setState(() {
+                                      currentFontStyle = selectedFontStyle;
+                                    });
+                                  }
+                                },
                               ),
 
                               // Alignment
@@ -156,28 +205,50 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                                   color: AppTheme.onPrimaryColor,
                                   size: 30,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  showAlignmentPicker(
+                                    context,
+                                    currentTextAlignment: currentTextAlignment,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        currentTextAlignment = value;
+                                      });
+                                    },
+                                  );
+                                },
                               ),
 
                               // Font Weight
                               IconButton(
                                 icon: Icon(
                                   Icons.format_bold,
-                                  color: AppTheme.onPrimaryColor,
+                                  color:
+                                      isBold
+                                          ? const Color.fromARGB(
+                                            255,
+                                            203,
+                                            105,
+                                            1,
+                                          )
+                                          : AppTheme.onPrimaryColor,
                                   size: 35,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  setState(() {
+                                    isBold = !isBold;
+                                  });
+                                },
                               ),
 
-                              //Italic
-                              IconButton(
-                                icon: Icon(
-                                  Icons.format_italic,
-                                  color: AppTheme.onPrimaryColor,
-                                  size: 35,
-                                ),
-                                onPressed: () {},
-                              ),
+                              // //Italic
+                              // IconButton(
+                              //   icon: Icon(
+                              //     Icons.format_italic,
+                              //     color: AppTheme.onPrimaryColor,
+                              //     size: 35,
+                              //   ),
+                              //   onPressed: () {},
+                              // ),
                             ],
                           ),
                         ),

@@ -42,8 +42,8 @@ class SocialLoginButton extends StatelessWidget {
 }
 
 // SizedBox(width: 6),
-      // Tooltip(
-      //   message:
-      //       "As readers, guest users can enjoy posts. Interacting with posts requires a login.",
-      //   child: Icon(Icons.info_outline, size: 14),
-      // ),
+// Tooltip(
+//   message:
+//       "As readers, guest users can enjoy posts. Interacting with posts requires a login.",
+//   child: Icon(Icons.info_outline, size: 14),
+// ),

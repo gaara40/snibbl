@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:storygram/constants/assets.dart';
 import 'package:storygram/providers/auth_providers.dart';
 import 'package:storygram/themes/app_theme.dart';
+import 'package:storygram/widgets/email_text_field.dart';
+import 'package:storygram/widgets/password_text_field.dart';
+import 'package:storygram/widgets/snibble_logo.dart';
+import 'package:storygram/widgets/username_text_field.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -14,18 +17,27 @@ class SignupScreen extends ConsumerStatefulWidget {
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  bool _obscureText = true;
+  bool _obscurePassword = true;
   bool _loading = false;
 
   //controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _usernameController.dispose();
     super.dispose();
+  }
+
+  //togglePasswordVisibility
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
   }
 
   void _handleSignUp() async {
@@ -49,6 +61,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       await auth.signUpWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
+        _usernameController.text.trim(),
       );
 
       //logging out user immediately to force login
@@ -92,7 +105,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: AppTheme.surfaceColor,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -101,16 +114,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: 50),
                 //LOGO
-                SizedBox(
-                  height: 220,
-                  child: Center(
-                    child: Image.asset(
-                      AppAssets.appNameLogo,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                SnibbleLogo(),
+
+                SizedBox(height: 40),
 
                 //WELCOME BACK MESSAGE
                 Text(
@@ -127,92 +135,22 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   child: Column(
                     children: [
                       //EMAIL TEXTFIELD
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          fillColor: AppTheme.secondaryColor,
-                          filled: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: AppTheme.inversePrimary,
-                              width: 2.5,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: AppTheme.onSecondaryColor,
-                            ),
-                          ),
-                          labelStyle: TextStyle(color: AppTheme.onPrimaryColor),
-                          labelText: 'Email Address',
-                          prefixIcon: Icon(Icons.email_outlined),
-                          prefixIconColor: AppTheme.onPrimaryColor,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Email is required.';
-                          } else if (!RegExp(
-                            r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
-                          ).hasMatch(value.trim())) {
-                            return 'Enter a valid email address';
-                          }
-                          return null;
-                        },
-                      ),
+                      EmailTextField(controller: _emailController),
+
                       SizedBox(height: 12),
 
                       //PASSWORD TEXTFIELD
-                      TextFormField(
+                      PasswordTextField(
                         controller: _passwordController,
-
-                        decoration: InputDecoration(
-                          fillColor: AppTheme.secondaryColor,
-                          filled: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: AppTheme.inversePrimary,
-                              width: 2.5,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: AppTheme.onSecondaryColor,
-                            ),
-                          ),
-                          labelStyle: TextStyle(color: AppTheme.onPrimaryColor),
-                          labelText: 'Password',
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
-                            color: AppTheme.onPrimaryColor,
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                          ),
-                        ),
-                        obscureText: _obscureText,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Password is required.';
-                          } else if (value.trim().length < 6) {
-                            return 'Password must be at least 6 characters.';
-                          }
-                          return null;
-                        },
+                        obscureText: _obscurePassword,
+                        toggleVisibility: _togglePasswordVisibility,
                       ),
+
+                      SizedBox(height: 12),
+
+                      //USERNAME TEXTFIELD
+                      UsernameTextField(controller: _usernameController),
+
                       SizedBox(height: 28),
 
                       //SIGNUP BUTTON

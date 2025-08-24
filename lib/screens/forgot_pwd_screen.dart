@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:storygram/constants/assets.dart';
 import 'package:storygram/providers/auth_providers.dart';
 import 'package:storygram/themes/app_theme.dart';
+import 'package:storygram/widgets/snibble_logo.dart';
 
 class ForgotPwdScreen extends ConsumerStatefulWidget {
   const ForgotPwdScreen({super.key});
@@ -75,7 +75,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPwdScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: AppTheme.surfaceColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -84,16 +83,11 @@ class _ForgotPasswordState extends ConsumerState<ForgotPwdScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: 50),
                 //LOGO
-                SizedBox(
-                  height: 220,
-                  child: Center(
-                    child: Image.asset(
-                      AppAssets.appNameLogo,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                SnibbleLogo(),
+
+                SizedBox(height: 40),
 
                 //WELCOME BACK MESSAGE
                 Text(
@@ -103,7 +97,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPwdScreen> {
                     fontSize: 18,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Text(

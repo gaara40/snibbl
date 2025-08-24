@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:storygram/helpers/toasts.dart';
 
 class AuthServices {
   final _firebaseAuth = FirebaseAuth.instance;
+  final _firebaseFirestore = FirebaseFirestore.instance;
 
   //current user email
   currentUserEmail() {
@@ -13,14 +14,24 @@ class AuthServices {
   }
 
   //signup with email and password
-  Future<UserCredential?> signUpWithEmail(String email, String password) async {
+  Future<UserCredential?> signUpWithEmail(
+    String email,
+    String password,
+    String username,
+  ) async {
     try {
       final userCred = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      await _firebaseFirestore.collection('users').doc(userCred.user!.uid).set({
+        'email': email,
+        'username': username,
+      });
       return userCred;
     } on FirebaseAuthException catch (e) {
+      debugPrint('Error : $e');
       throw _handleFirebaseLoginError(e);
     }
   }
@@ -39,19 +50,50 @@ class AuthServices {
   }
 
   //Google Sign-in
-  signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if (googleUser == null) return;
+    if (googleUser == null) {
+      throw FirebaseAuthException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign in aborted by user',
+      );
+    }
 
-    final GoogleSignInAuthentication gAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
-    return await _firebaseAuth.signInWithCredential(credential);
+    final UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithCredential(credential);
+
+    final User? user = userCredential.user;
+
+    if (user != null) {
+      // Reference to Firestore
+      final userDoc = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid);
+
+      // Check if user already exists in Firestore
+      final docSnapshot = await userDoc.get();
+
+      if (!docSnapshot.exists) {
+        // Create a new document if it doesn't exist
+        await userDoc.set({
+          'uid': user.uid,
+          'email': user.email,
+          'username': user.displayName ?? "", // Google display name
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+
+    return userCredential;
   }
 
   //reset password
@@ -76,9 +118,6 @@ class AuthServices {
 
       await _firebaseAuth.signOut();
       await GoogleSignIn().signOut();
-
-      //show success toast
-      showToast('Signed out successfully');
     } catch (e) {
       debugPrint('Error during sign out: $e');
     }

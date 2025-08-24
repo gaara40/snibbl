@@ -248,7 +248,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     //google signin
                     SocialLoginButton(
                       logoAssetPath: AppAssets.googleLogo,
-                      onTap: AuthServices().signInWithGoogle,
+                      onTap: () async {
+                        final googleUserCred =
+                            await ref
+                                .read(authServiceProvider)
+                                .signInWithGoogle();
+
+                        final displayName =
+                            googleUserCred.user?.displayName ?? 'User';
+
+                        navigatorKey.currentState!.pushNamedAndRemoveUntil(
+                          '/mainScreen',
+                          (route) => false,
+                        );
+                        if (!mounted) return;
+                        showToast('Welcome $displayName');
+                      },
                     ),
 
                     SizedBox(height: 80),
@@ -256,7 +271,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     //NEW USER SIGNUP
                     NewAccountBtn(
                       onTap: () {
-                        navigatorKey.currentState!.pushNamed('/signupScreen');
+                        navigatorKey.currentState!.pushNamed('/signUpScreen');
                       },
                     ),
                   ],

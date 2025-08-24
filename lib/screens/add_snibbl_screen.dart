@@ -1,26 +1,108 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:storygram/constants/assets.dart';
 import 'package:storygram/helpers/alignment_picker.dart';
 import 'package:storygram/helpers/font_style_picker.dart';
 import 'package:storygram/helpers/snibbl_hints.dart';
 import 'package:storygram/helpers/font_size_picker.dart';
+import 'package:storygram/main.dart';
+import 'package:storygram/services/upload_post_service.dart';
 import 'package:storygram/themes/app_theme.dart';
 
-class AddSnibblScreen extends StatefulWidget {
+class AddSnibblScreen extends ConsumerStatefulWidget {
   const AddSnibblScreen({super.key});
 
   @override
-  State<AddSnibblScreen> createState() => _AddSnibblScreenState();
+  ConsumerState<AddSnibblScreen> createState() => _AddSnibblScreenState();
 }
 
-class _AddSnibblScreenState extends State<AddSnibblScreen> {
+class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
   double currentFontSize = 18;
   String currentFontStyle = 'Poppins';
   TextAlign currentTextAlignment = TextAlign.left;
   bool isBold = false;
+  late String username;
+
+  final _postTextontroller = TextEditingController();
+
+  @override
+  void dispose() {
+    _postTextontroller.dispose();
+    super.dispose();
+  }
+
+  final _firebaseAuth = FirebaseAuth.instance;
+
+  Future<void> onPost() async {
+    final user = _firebaseAuth.currentUser;
+
+    final postText = _postTextontroller.text.trim();
+
+    //validate text
+    if (postText.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please enter you snibbl',
+        toastLength: Toast.LENGTH_SHORT,
+      );
+      return;
+    } else if (postText.length < 15) {
+      Fluttertoast.showToast(
+        msg: 'A Snibbl should contain atleast 15 characters',
+      );
+      return;
+    } else if (postText.length > 1000) {
+      Fluttertoast.showToast(msg: 'A Snibble shoul not exceed 1000 characters');
+      return;
+    }
+
+    if (user == null) return;
+
+    if (user.isAnonymous) {
+      username = user.displayName.toString();
+    } else {
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      if (userDoc.exists) {
+        username = userDoc.data()?['username'] ?? 'undefined';
+      } else {
+        username = user.displayName ?? 'undefined_user';
+      }
+    }
+
+    try {
+      await UploadPostService().uploadPost(
+        userId: user.uid,
+        email: user.email ?? '',
+        username: username,
+        fontSize: currentFontSize,
+        fontStyle: currentFontStyle,
+        textAlignment: currentTextAlignment,
+        isBold: isBold,
+        text: postText,
+      );
+
+      if (!mounted) return;
+
+      Fluttertoast.showToast(msg: 'Post uploaded successfully');
+      navigatorKey.currentState!.pushNamedAndRemoveUntil(
+        '/mainScreen',
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      Fluttertoast.showToast(msg: 'Error uploading post: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,29 +142,7 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(16),
-                                      ),
-                                    ),
-                                    title: Text('Hang on...'),
-                                    content: const Text(
-                                      'Post will be available in the next update.\n'
-                                      'Just giving it a little polish ✨',
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(ctx),
-                                        child: const Text('Okay'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              onPost();
                             },
                             child: Text(
                               'Post',
@@ -99,7 +159,6 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
 
                   SizedBox(height: 8),
 
-                  //textfield
                   SingleChildScrollView(
                     child: Column(
                       children: [
@@ -113,7 +172,10 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(5),
+
+                            //TEXTFIELD
                             child: TextField(
+                              controller: _postTextontroller,
                               autocorrect: true,
                               maxLines: null,
                               textAlign: currentTextAlignment,
@@ -128,10 +190,15 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                                     snibblHints[Random().nextInt(
                                       snibblHints.length,
                                     )],
-                                hintStyle: TextStyle(
+                                hintStyle: GoogleFonts.getFont(
+                                  currentFontStyle,
                                   color: AppTheme.onSecondaryColor.withValues(
-                                    alpha: 0.6,
+                                    alpha: 0.3,
                                   ),
+                                  fontWeight:
+                                      isBold
+                                          ? FontWeight.w300
+                                          : FontWeight.w300,
                                 ),
                                 contentPadding: EdgeInsets.all(12),
                               ),
@@ -139,7 +206,8 @@ class _AddSnibblScreenState extends State<AddSnibblScreen> {
                                 currentFontStyle,
                                 fontSize: currentFontSize,
                                 fontWeight:
-                                    isBold ? FontWeight.bold : FontWeight.w100,
+                                    isBold ? FontWeight.bold : FontWeight.w300,
+                                color: AppTheme.onSecondaryColor,
                               ),
                             ),
                           ),

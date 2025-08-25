@@ -31,65 +31,128 @@ class PostCard extends StatelessWidget {
         border: Border.all(),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8),
-
-            child: Column(
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
+                //USERNAME LOGO
+                CircleAvatar(
+                  radius: 18,
+                  child: Text(
+                    username.isNotEmpty ? username[0].toUpperCase() : 'NA',
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //USERNAME LOGO
-                    CircleAvatar(
-                      radius: 18,
-                      child: Text(
-                        username.isNotEmpty ? username[0].toUpperCase() : 'NA',
+                    //USERNAME
+                    Text(
+                      username.isNotEmpty ? username : 'undefined_user',
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
-                    const SizedBox(width: 10),
 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //USERNAME
-                        Text(
-                          username.isNotEmpty ? username : 'undefined_user',
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-
-                        //DATE AND TIME
-                        Text(
-                          _formatDate(createdAt),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
+                    //DATE AND TIME
+                    Text(
+                      _formatDate(createdAt),
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-
-                //POST-TEXT
-                Text(
-                  text,
-                  textAlign: textAlignment,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 10,
-                  style: GoogleFonts.getFont(
-                    fontStyle,
-                    fontSize: fontSize,
-                    fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
-                  ),
-                ),
               ],
             ),
-          ),
-        ],
+
+            const SizedBox(height: 15),
+
+            //POST-TEXT
+            Expanded(
+              child: Text(
+                text,
+                textAlign: textAlignment,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 10,
+                style: GoogleFonts.getFont(
+                  fontStyle,
+                  fontSize: fontSize,
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+                ),
+              ),
+            ),
+
+            // Divider
+            Divider(height: 1, thickness: 0.5, color: theme.dividerColor),
+
+            // Action buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Like button
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.favorite_border,
+                        size: 25,
+                        color: theme.iconTheme.color,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        '0',
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(width: 10),
+
+                  // Comment button
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.comment_outlined,
+                        size: 25,
+                        color: theme.iconTheme.color,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        '0',
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(width: 10),
+                  // Save button
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.bookmark_border,
+                        size: 25,
+                        color: theme.iconTheme.color,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class UploadPostService {
   final _firebaseFirestore = FirebaseFirestore.instance;
 
-  Future<void> uploadPost({
+  Future<String> uploadPost({
     required String userId,
     required String email,
     required String username,
@@ -18,7 +18,7 @@ class UploadPostService {
   }) async {
     try {
       //sending data to firestore
-      await _firebaseFirestore.collection('posts').add({
+      final docRef = await _firebaseFirestore.collection('posts').add({
         'userId': userId,
         'email': email,
         'username': username,
@@ -28,7 +28,10 @@ class UploadPostService {
         'isBold': isBold,
         'post': text,
         'createdAt': Timestamp.now(),
+        'likeCount': 0,
       });
+
+      return docRef.id;
     } catch (e) {
       debugPrint('Error uploading post: $e');
       rethrow;

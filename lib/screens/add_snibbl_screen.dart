@@ -80,7 +80,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
     }
 
     try {
-      await UploadPostService().uploadPost(
+      final postId = await UploadPostService().uploadPost(
         userId: user.uid,
         email: user.email ?? '',
         username: username,
@@ -90,6 +90,8 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
         isBold: isBold,
         text: postText,
       );
+
+      debugPrint('Posted successfully with postId: $postId');
 
       if (!mounted) return;
 

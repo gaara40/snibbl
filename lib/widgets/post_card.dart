@@ -12,6 +12,12 @@ class PostCard extends StatelessWidget {
     required this.fontStyle,
     required this.textAlignment,
     required this.isBold,
+    required this.likeCount,
+    required this.isLiked,
+    required this.onLikeTap,
+    required this.onCommentTap,
+    required this.onSaveTap,
+    required this.commentCount,
   });
 
   final String username;
@@ -21,6 +27,14 @@ class PostCard extends StatelessWidget {
   final String fontStyle;
   final TextAlign textAlignment;
   final bool isBold;
+
+  //INTERACTION VARIABLES
+  final int likeCount;
+  final int commentCount;
+  final bool isLiked;
+  final VoidCallback onLikeTap;
+  final VoidCallback onCommentTap;
+  final VoidCallback onSaveTap;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +46,7 @@ class PostCard extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,6 +80,7 @@ class PostCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                Spacer(),
               ],
             ),
 
@@ -77,7 +92,7 @@ class PostCard extends StatelessWidget {
                 text,
                 textAlign: textAlignment,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 10,
+                maxLines: 8,
                 style: GoogleFonts.getFont(
                   fontStyle,
                   fontSize: fontSize,
@@ -91,7 +106,7 @@ class PostCard extends StatelessWidget {
 
             // Action buttons
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,14 +115,30 @@ class PostCard extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.favorite_border,
-                        size: 25,
-                        color: theme.iconTheme.color,
+                      GestureDetector(
+                        // onTap: () {
+                        //   showDialog(
+                        //     context: context,
+                        //     builder: (ctx) {
+                        //       return AlertDialog(
+                        //         content: Text(
+                        //           'Coming soon...',
+                        //           style: TextStyle(fontSize: 18),
+                        //         ),
+                        //       );
+                        //     },
+                        //   );
+                        // },
+                        onTap: onLikeTap,
+                        child: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          size: 25,
+                          color: theme.iconTheme.color,
+                        ),
                       ),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: 5),
                       Text(
-                        '0',
+                        likeCount == 0 ? '' : '$likeCount',
                         style: theme.textTheme.bodySmall!.copyWith(
                           fontSize: 15,
                         ),
@@ -115,20 +146,36 @@ class PostCard extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(width: 10),
+                  SizedBox(width: 15),
 
                   // Comment button
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.comment_outlined,
-                        size: 25,
-                        color: theme.iconTheme.color,
+                      GestureDetector(
+                        // onTap: () {
+                        //   showDialog(
+                        //     context: context,
+                        //     builder: (ctx) {
+                        //       return AlertDialog(
+                        //         content: Text(
+                        //           'Coming soon...',
+                        //           style: TextStyle(fontSize: 18),
+                        //         ),
+                        //       );
+                        //     },
+                        //   );
+                        // },
+                        onTap: onCommentTap,
+                        child: Icon(
+                          Icons.comment_outlined,
+                          size: 25,
+                          color: theme.iconTheme.color,
+                        ),
                       ),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: 5),
                       Text(
-                        '0',
+                        commentCount == 0 ? '' : '$commentCount',
                         style: theme.textTheme.bodySmall!.copyWith(
                           fontSize: 15,
                         ),
@@ -136,15 +183,32 @@ class PostCard extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(width: 10),
+                  SizedBox(width: 15),
+
                   // Save button
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.bookmark_border,
-                        size: 25,
-                        color: theme.iconTheme.color,
+                      GestureDetector(
+                        // onTap: () {
+                        //   showDialog(
+                        //     context: context,
+                        //     builder: (ctx) {
+                        //       return AlertDialog(
+                        //         content: Text(
+                        //           'Coming soon...',
+                        //           style: TextStyle(fontSize: 18),
+                        //         ),
+                        //       );
+                        //     },
+                        //   );
+                        // },
+                        onTap: onSaveTap,
+                        child: Icon(
+                          Icons.bookmark_outline,
+                          size: 25,
+                          color: theme.iconTheme.color,
+                        ),
                       ),
                     ],
                   ),

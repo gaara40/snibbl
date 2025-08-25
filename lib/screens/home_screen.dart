@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/constants/assets.dart';
-import 'package:storygram/widgets/posts_feed.dart';
+import 'package:storygram/widgets/posts_item.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -34,7 +35,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               //FEED
               child: Padding(
                 padding: const EdgeInsets.all(4),
-                child: PostsFeed(onTap: () {}),
+                child: StreamBuilder(
+                  stream:
+                      FirebaseFirestore.instance
+                          .collection('posts')
+                          .orderBy('createdAt', descending: true)
+                          .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "No Snibbls yet..\nBe the first to share yours!\nTap the + button below to add one.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final docs = snapshot.data!.docs;
+
+                    return ListView.separated(
+                      itemBuilder: (context, index) {
+                        final postId = docs[index].id;
+                        return PostsItem(onTap: () {}, postId: postId);
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Padding(padding: EdgeInsets.all(6));
+                      },
+                      itemCount: docs.length,
+                    );
+                  },
+                ),
               ),
             ),
           ],

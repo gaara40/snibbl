@@ -33,7 +33,7 @@ class PostCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+
         children: [
           Padding(
             padding: EdgeInsets.all(8),
@@ -57,15 +57,16 @@ class PostCard extends StatelessWidget {
                         //USERNAME
                         Text(
                           username.isNotEmpty ? username : 'undefined_user',
-                          style: theme.textTheme.headlineMedium!.copyWith(
+                          style: theme.textTheme.bodyMedium!.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
 
                         //DATE AND TIME
                         Text(
                           _formatDate(createdAt),
-                          style: theme.textTheme.headlineSmall,
+                          style: theme.textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -78,6 +79,7 @@ class PostCard extends StatelessWidget {
                   text,
                   textAlign: textAlignment,
                   overflow: TextOverflow.ellipsis,
+                  maxLines: 10,
                   style: GoogleFonts.getFont(
                     fontStyle,
                     fontSize: fontSize,
@@ -103,6 +105,6 @@ class PostCard extends StatelessWidget {
     if (difference.inDays == 1) return "Yesterday";
     if (difference.inDays < 6) return "${difference.inDays}d ago";
 
-    return DateFormat('d MM yyyy').format(date);
+    return DateFormat('d MMM yyyy').format(date);
   }
 }

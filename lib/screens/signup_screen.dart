@@ -68,7 +68,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       await auth.signOut();
 
       Fluttertoast.showToast(
-        msg: 'SignIn Successful. Please Login',
+        msg: 'Signup Successful. Please Login',
         backgroundColor: AppTheme.primaryColor,
       );
 

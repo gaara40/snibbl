@@ -6,6 +6,7 @@ import 'package:storygram/helpers/on_tap_save.dart';
 import 'package:storygram/helpers/toggle_like.dart';
 import 'package:storygram/providers/post_provider.dart';
 import 'package:storygram/providers/user_like_provider.dart';
+import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/post_card.dart';
 
 class PostsItem extends ConsumerWidget {
@@ -20,7 +21,14 @@ class PostsItem extends ConsumerWidget {
     final userLikeSnapshot = ref.watch(userLikeProvider(postId));
 
     if (postSnapshot.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Container(
+        height: 400,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 248, 229, 181),
+          border: Border.all(color: AppTheme.inverseSecondary),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      );
     }
 
     if (!postSnapshot.hasValue || !postSnapshot.value!.exists) {

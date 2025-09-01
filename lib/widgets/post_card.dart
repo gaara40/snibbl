@@ -12,12 +12,13 @@ class PostCard extends StatelessWidget {
     required this.fontStyle,
     required this.textAlignment,
     required this.isBold,
-    required this.likeCount,
+    required this.likes,
     required this.isLiked,
     required this.onLikeTap,
     required this.onCommentTap,
     required this.onSaveTap,
     required this.commentCount,
+    required this.likesCount,
   });
 
   final String username;
@@ -29,7 +30,8 @@ class PostCard extends StatelessWidget {
   final bool isBold;
 
   //INTERACTION VARIABLES
-  final int likeCount;
+  final List<String> likes;
+  final String likesCount;
   final int commentCount;
   final bool isLiked;
   final VoidCallback onLikeTap;
@@ -116,19 +118,6 @@ class PostCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        // onTap: () {
-                        //   showDialog(
-                        //     context: context,
-                        //     builder: (ctx) {
-                        //       return AlertDialog(
-                        //         content: Text(
-                        //           'Coming soon...',
-                        //           style: TextStyle(fontSize: 18),
-                        //         ),
-                        //       );
-                        //     },
-                        //   );
-                        // },
                         onTap: onLikeTap,
                         child: Icon(
                           isLiked ? Icons.favorite : Icons.favorite_border,
@@ -138,7 +127,7 @@ class PostCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        likeCount == 0 ? '' : '$likeCount',
+                        likesCount == '0' ? '' : likesCount,
                         style: theme.textTheme.bodySmall!.copyWith(
                           fontSize: 15,
                         ),
@@ -190,20 +179,20 @@ class PostCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        // onTap: () {
-                        //   showDialog(
-                        //     context: context,
-                        //     builder: (ctx) {
-                        //       return AlertDialog(
-                        //         content: Text(
-                        //           'Coming soon...',
-                        //           style: TextStyle(fontSize: 18),
-                        //         ),
-                        //       );
-                        //     },
-                        //   );
-                        // },
-                        onTap: onSaveTap,
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return AlertDialog(
+                                content: Text(
+                                  'Coming soon...',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        // onTap: onSaveTap,
                         child: Icon(
                           Icons.bookmark_outline,
                           size: 25,

@@ -15,6 +15,7 @@ class UploadPostService {
     required TextAlign textAlignment,
     required bool isBold,
     required String text,
+    required List<String> likes,
   }) async {
     try {
       //sending data to firestore
@@ -28,7 +29,7 @@ class UploadPostService {
         'isBold': isBold,
         'post': text,
         'createdAt': Timestamp.now(),
-        'likeCount': 0,
+        'likes': likes,
       });
 
       return docRef.id;

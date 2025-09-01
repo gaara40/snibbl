@@ -1,24 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/helpers/on_tap_comment.dart';
 import 'package:storygram/helpers/on_tap_save.dart';
-import 'package:storygram/helpers/toggle_like.dart';
 import 'package:storygram/providers/post_provider.dart';
-import 'package:storygram/providers/user_like_provider.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/post_card.dart';
 
-class PostsItem extends ConsumerWidget {
+class PostsItem extends ConsumerStatefulWidget {
   const PostsItem({super.key, required this.onTap, required this.postId});
 
   final String postId;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final postSnapshot = ref.watch(postProvider(postId));
-    final userLikeSnapshot = ref.watch(userLikeProvider(postId));
+  ConsumerState<PostsItem> createState() => _PostsItemState();
+}
+
+class _PostsItemState extends ConsumerState<PostsItem> {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  bool isLiked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final postSnapshot = ref.watch(postProvider(widget.postId));
 
     if (postSnapshot.isLoading) {
       return Container(
@@ -45,11 +51,16 @@ class PostsItem extends ConsumerWidget {
     }
 
     final data = postSnapshot.value!.data() as Map<String, dynamic>;
-    final isLiked = userLikeSnapshot.value?.exists ?? false;
+
+    //List of Likes
+    final likesList = List<String>.from(data['likes'] ?? []);
+
+    //Checking if the current user has liked or not
+    isLiked = likesList.contains(currentUser!.email);
 
     return GestureDetector(
       //show full post(poem) on tapping the card
-      onTap: onTap,
+      onTap: widget.onTap,
 
       child: PostCard(
         username: data['username'] ?? 'undefined_user',
@@ -59,10 +70,29 @@ class PostsItem extends ConsumerWidget {
         fontStyle: data['fontStyle'] ?? 'poppins',
         textAlignment: _mapAlignment(data['textAlign']),
         isBold: data['isBold'] ?? false,
-        likeCount: data['likeCount'] ?? 0,
+        likes: likesList,
+        likesCount: likesList.length.toString(),
         isLiked: isLiked,
-        onLikeTap: () {
-          toggleLike(postId, isLiked);
+        onLikeTap: () async {
+          final postRef = FirebaseFirestore.instance
+              .collection('posts')
+              .doc(widget.postId);
+
+          if (isLiked) {
+            // unlike
+            await postRef.update({
+              'likes': FieldValue.arrayRemove([currentUser!.email]),
+            });
+          } else {
+            // like
+            await postRef.update({
+              'likes': FieldValue.arrayUnion([currentUser!.email]),
+            });
+          }
+
+          setState(() {
+            isLiked = !isLiked;
+          });
         },
         onCommentTap: () {
           onTapComment(context);

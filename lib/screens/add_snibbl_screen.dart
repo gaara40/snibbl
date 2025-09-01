@@ -89,6 +89,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
         textAlignment: currentTextAlignment,
         isBold: isBold,
         text: postText,
+        likes: [],
       );
 
       debugPrint('Posted successfully with postId: $postId');

@@ -16,9 +16,8 @@
 - **Flutter** (UI framework)  
 - **Firebase**  
   - Authentication (email/password, Google, guest)  
-  - Firestore (for posts, comments, likes, saves)  
-  - Cloud Storage (for media, if used)  
-  - Cloud Messaging (for notifications)  
+  - Firestore (for posts, comments, likes, saves)   
+  - Cloud Messaging (FCM) - push notifications (likes, comments, etc.) 
 - **Riverpod** (state management)  
 
 

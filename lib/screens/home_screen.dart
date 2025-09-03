@@ -67,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         return PostsItem(onTap: () {}, postId: postId);
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return Padding(padding: EdgeInsets.all(6));
+                        return Padding(padding: EdgeInsets.all(5));
                       },
                       itemCount: docs.length,
                     );

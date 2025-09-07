@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storygram/comments/providers/comment_count_provider.dart';
+import 'package:storygram/comments/providers/current_user_username_provider.dart';
 import 'package:storygram/helpers/on_tap_comment.dart';
 import 'package:storygram/helpers/on_tap_save.dart';
 import 'package:storygram/providers/post_provider.dart';
@@ -24,9 +26,13 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
   @override
   Widget build(BuildContext context) {
+    final userAsync = ref.watch(currentUserUsernameProvider);
     final postSnapshot = ref.watch(postProvider(widget.postId));
+    final commentCountAsync = ref.watch(commentCountProvider(widget.postId));
 
-    if (postSnapshot.isLoading) {
+    if (postSnapshot.isLoading ||
+        userAsync.isLoading ||
+        commentCountAsync.isLoading) {
       return Container(
         height: 400,
         decoration: BoxDecoration(
@@ -57,6 +63,12 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
     //Checking if the current user has liked or not
     isLiked = likesList.contains(currentUser!.email);
+
+    //Current User Username
+    final username = userAsync.value ?? 'Anonymous';
+
+    //Comments Count
+    final commentCount = commentCountAsync.value ?? 0;
 
     return GestureDetector(
       //show full post(poem) on tapping the card
@@ -95,12 +107,17 @@ class _PostsItemState extends ConsumerState<PostsItem> {
           });
         },
         onCommentTap: () {
-          onTapComment(context);
+          onTapComment(
+            context,
+            postId: widget.postId,
+            currentUserId: currentUser!.uid,
+            username: username,
+          );
         },
         onSaveTap: () {
           onTapSave(context);
         },
-        commentCount: 0,
+        commentCount: commentCount,
       ),
     );
   }

@@ -142,19 +142,6 @@ class PostCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        // onTap: () {
-                        //   showDialog(
-                        //     context: context,
-                        //     builder: (ctx) {
-                        //       return AlertDialog(
-                        //         content: Text(
-                        //           'Coming soon...',
-                        //           style: TextStyle(fontSize: 18),
-                        //         ),
-                        //       );
-                        //     },
-                        //   );
-                        // },
                         onTap: onCommentTap,
                         child: Icon(
                           Icons.comment_outlined,

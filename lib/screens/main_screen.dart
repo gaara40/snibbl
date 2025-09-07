@@ -79,9 +79,13 @@ class _MainScreenState extends State<MainScreen> {
       ],
 
       navBarStyle: NavBarStyle.style13,
-      resizeToAvoidBottomInset: true, // let content resize
-      confineToSafeArea: true, // respect safe areas
-      stateManagement: true, // keep tab state
+
+      resizeToAvoidBottomInset: false, // This is crucial!
+      confineToSafeArea: false, // Set to false for better control
+      stateManagement: true,
+
+      // Additional settings that might help:
+      handleAndroidBackButtonPress: true,
     );
   }
 }

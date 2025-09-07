@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:storygram/themes/app_theme.dart';
-import 'package:storygram/widgets/comment_overlay.dart';
+import 'package:storygram/widgets/comment_section.dart';
 
 void onTapComment(BuildContext context) {
+  // Getting the navigator context to avoid PersistentTabView interference
   showModalBottomSheet(
-    useSafeArea: true,
-    backgroundColor: AppTheme.secondaryColor,
+    context: Navigator.of(context, rootNavigator: true).context,
+    useSafeArea: false,
+    backgroundColor: Colors.transparent,
     isScrollControlled: true,
-    context: context,
-
+    enableDrag: true,
+    isDismissible: true,
     builder: (ctx) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + 5,
-        ),
-        child: CommentOverlay(),
-      );
+      return CommentSection();
     },
   );
 }
@@ -26,6 +22,6 @@ void showComments(BuildContext context) {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => const InstagramCommentsWidget(),
+    builder: (context) => const CommentSection(),
   );
 }

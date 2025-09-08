@@ -18,7 +18,7 @@ Future<double?> showFontSizePicker(
     builder: (ctx) {
       // local temp state that only lives inside the sheet
       double temp = currentFontSize.clamp(min, max);
-      final presets = <double>[12, 14, 16, 18, 20, 24, 28, 32, 36];
+      final presets = <double>[12, 14, 16, 18, 20, 24, 28];
 
       return StatefulBuilder(
         builder: (ctx, setSheet) {

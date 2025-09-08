@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/providers/auth_providers.dart';
-import 'package:storygram/widgets/saved_posts_tab.dart';
 import 'package:storygram/widgets/saved_posts_widget.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {

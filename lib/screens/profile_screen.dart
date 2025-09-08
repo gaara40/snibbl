@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/providers/auth_providers.dart';
+import 'package:storygram/widgets/saved_posts_tab.dart';
+import 'package:storygram/widgets/saved_posts_widget.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -38,7 +40,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ],
       ),
-      body: Center(child: Text('This is Profile Section')),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text('Profile', style: TextStyle(fontSize: 30)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => SavedPostsWidget()),
+                );
+              },
+              child: Text('Saved Posts', style: TextStyle(fontSize: 20)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

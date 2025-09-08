@@ -7,6 +7,7 @@ import 'package:storygram/comments/providers/current_user_username_provider.dart
 import 'package:storygram/helpers/on_tap_comment.dart';
 import 'package:storygram/helpers/on_tap_save.dart';
 import 'package:storygram/providers/post_provider.dart';
+import 'package:storygram/saved_posts/providers/saved_post_provider.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/post_card.dart';
 
@@ -26,8 +27,13 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
   @override
   Widget build(BuildContext context) {
+    //Current UserName Provider
     final userAsync = ref.watch(currentUserUsernameProvider);
+
+    //Post Provider
     final postSnapshot = ref.watch(postProvider(widget.postId));
+
+    //Comments Count Provider
     final commentCountAsync = ref.watch(commentCountProvider(widget.postId));
 
     if (postSnapshot.isLoading ||
@@ -69,6 +75,14 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
     //Comments Count
     final commentCount = commentCountAsync.value ?? 0;
+
+    //Saved Post Provider
+    final savedPostsAsync = ref.watch(savedPostProvider);
+
+    //Saved Posts
+    final savedPosts = savedPostsAsync.value ?? [];
+
+    final isSaved = savedPosts.contains(widget.postId);
 
     return GestureDetector(
       //show full post(poem) on tapping the card
@@ -115,9 +129,10 @@ class _PostsItemState extends ConsumerState<PostsItem> {
           );
         },
         onSaveTap: () {
-          onTapSave(context);
+          onTapSave(context, isSaved, widget.postId);
         },
         commentCount: commentCount,
+        isSaved: isSaved,
       ),
     );
   }

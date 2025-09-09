@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storygram/saved_posts/providers/saved_post_provider.dart';
-import 'package:storygram/widgets/post_card.dart';
+import 'package:storygram/widgets/posts_item.dart';
 
 class SavedPostsTab extends ConsumerWidget {
   const SavedPostsTab({super.key});
@@ -40,30 +40,16 @@ class SavedPostsTab extends ConsumerWidget {
 
             final posts = snapshot.data!.docs;
 
-            return ListView.builder(
-              itemCount: posts.length,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            return ListView.separated(
+              padding: EdgeInsets.only(bottom: 8),
               itemBuilder: (context, index) {
-                final postData = posts[index].data() as Map<String, dynamic>;
-
-                return PostCard(
-                  username: postData['username'] ?? 'Unknown',
-                  text: postData['post'] ?? '',
-                  createdAt: (postData['createdAt'] as Timestamp).toDate(),
-                  fontSize: (postData['fontSize'] ?? 18).toDouble(),
-                  fontStyle: postData['fontStyle'] ?? 'poppins',
-                  textAlignment: TextAlign.left,
-                  isBold: postData['isBold'] ?? false,
-                  likes: List<String>.from(postData['likes'] ?? []),
-                  likesCount: (postData['likes']?.length ?? 0).toString(),
-                  commentCount: 0,
-                  isLiked: false,
-                  isSaved: true, //Since we're in Saved Tab
-                  onLikeTap: () {},
-                  onCommentTap: () {},
-                  onSaveTap: () {}, // We can allow unsave here too later
-                );
+                final postId = posts[index].id;
+                return PostsItem(onTap: () {}, postId: postId);
               },
+              separatorBuilder: (context, index) {
+                return Padding(padding: EdgeInsets.all(5));
+              },
+              itemCount: posts.length,
             );
           },
         );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/providers/auth_providers.dart';
@@ -47,9 +48,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                PersistentNavBarNavigator.pushNewScreen(
                   context,
-                  MaterialPageRoute(builder: (_) => SavedPostsWidget()),
+                  screen: const SavedPostsWidget(),
+                  withNavBar: false,
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
                 );
               },
               child: Text('Saved Posts', style: TextStyle(fontSize: 20)),

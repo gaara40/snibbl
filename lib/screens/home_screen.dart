@@ -62,6 +62,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     final docs = snapshot.data!.docs;
 
                     return ListView.separated(
+                      padding: EdgeInsets.only(
+                        bottom: kBottomNavigationBarHeight + 4,
+                      ),
                       itemBuilder: (context, index) {
                         final postId = docs[index].id;
                         return PostsItem(onTap: () {}, postId: postId);

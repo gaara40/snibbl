@@ -34,7 +34,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Expanded(
               //FEED
               child: Padding(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.fromLTRB(
+                  6,
+                  4,
+                  6,
+                  kBottomNavigationBarHeight + 4,
+                ),
                 child: StreamBuilder(
                   stream:
                       FirebaseFirestore.instance
@@ -62,9 +67,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     final docs = snapshot.data!.docs;
 
                     return ListView.separated(
-                      padding: EdgeInsets.only(
-                        bottom: kBottomNavigationBarHeight + 4,
-                      ),
                       itemBuilder: (context, index) {
                         final postId = docs[index].id;
                         return PostsItem(onTap: () {}, postId: postId);

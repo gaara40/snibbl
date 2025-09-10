@@ -18,6 +18,9 @@ class AppTheme {
   //others
   static const tertiaryColor = Color.fromARGB(255, 247, 220, 179);
 
+  //loading state card color
+  static const Color loadingCardColor = Color.fromARGB(255, 245, 217, 175);
+
   static final lightTheme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme(

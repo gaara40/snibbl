@@ -92,6 +92,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
         likes: [],
       );
 
+      //Debugging
       debugPrint('Posted successfully with postId: $postId');
 
       if (!mounted) return;
@@ -109,7 +110,6 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color boxColor = const Color.fromARGB(255, 247, 225, 192);
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
@@ -169,7 +169,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                           height: 500,
 
                           decoration: BoxDecoration(
-                            color: boxColor,
+                            color: AppTheme.loadingCardColor,
                             border: Border(),
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
@@ -221,7 +221,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                         //text-editing bar
                         Container(
                           decoration: BoxDecoration(
-                            color: boxColor,
+                            color: AppTheme.loadingCardColor,
                             border: Border(),
                             borderRadius: BorderRadius.circular(15),
                           ),

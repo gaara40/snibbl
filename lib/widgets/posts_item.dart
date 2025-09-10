@@ -42,7 +42,7 @@ class _PostsItemState extends ConsumerState<PostsItem> {
       return Container(
         height: 400,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 248, 229, 181),
+          color: AppTheme.loadingCardColor.withValues(alpha: 0.5),
           border: Border.all(color: AppTheme.inverseSecondary),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),

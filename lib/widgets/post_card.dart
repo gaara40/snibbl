@@ -20,6 +20,7 @@ class PostCard extends StatelessWidget {
     required this.commentCount,
     required this.likesCount,
     required this.isSaved,
+    required this.onLikesCountTap,
   });
 
   final String username;
@@ -39,6 +40,7 @@ class PostCard extends StatelessWidget {
   final VoidCallback onLikeTap;
   final VoidCallback onCommentTap;
   final VoidCallback onSaveTap;
+  final VoidCallback onLikesCountTap;
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +130,13 @@ class PostCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 5),
-                      Text(
-                        likesCount == '0' ? '' : likesCount,
-                        style: theme.textTheme.bodySmall!.copyWith(
-                          fontSize: 15,
+                      GestureDetector(
+                        onTap: onLikesCountTap,
+                        child: Text(
+                          likesCount == '0' ? '' : likesCount,
+                          style: theme.textTheme.bodySmall!.copyWith(
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ],

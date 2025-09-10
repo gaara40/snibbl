@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/comments/providers/comment_count_provider.dart';
 import 'package:storygram/comments/providers/current_user_username_provider.dart';
-import 'package:storygram/helpers/on_tap_comment.dart';
-import 'package:storygram/helpers/on_tap_save.dart';
+import 'package:storygram/helpers/on_tap_comment_btn.dart';
+import 'package:storygram/helpers/on_tap_likes_count.dart';
+import 'package:storygram/helpers/on_tap_save_btn.dart';
 import 'package:storygram/providers/post_provider.dart';
 import 'package:storygram/saved_posts/providers/saved_post_provider.dart';
 import 'package:storygram/themes/app_theme.dart';
@@ -121,7 +122,7 @@ class _PostsItemState extends ConsumerState<PostsItem> {
           });
         },
         onCommentTap: () {
-          onTapComment(
+          onTapCommentBtn(
             context,
             postId: widget.postId,
             currentUserId: currentUser!.uid,
@@ -129,10 +130,13 @@ class _PostsItemState extends ConsumerState<PostsItem> {
           );
         },
         onSaveTap: () {
-          onTapSave(context, isSaved, widget.postId);
+          onTapSaveBtn(context, isSaved, widget.postId);
         },
         commentCount: commentCount,
         isSaved: isSaved,
+        onLikesCountTap: () {
+          onLikesCountTap(context, postId: widget.postId);
+        },
       ),
     );
   }

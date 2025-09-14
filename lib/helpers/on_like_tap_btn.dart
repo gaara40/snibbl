@@ -58,7 +58,7 @@ void onLikeTapBtn(BuildContext context, bool isLiked, String postId) async {
             'fromUsername': currentUsername,
             'postId': postId,
             'message': '$currentUsername liked you post',
-            'createAt': FieldValue.serverTimestamp(),
+            'createdAt': FieldValue.serverTimestamp(),
           });
     }
   }

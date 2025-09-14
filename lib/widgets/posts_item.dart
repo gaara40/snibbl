@@ -7,7 +7,7 @@ import 'package:storygram/comments/providers/current_user_username_provider.dart
 import 'package:storygram/helpers/on_tap_comment_btn.dart';
 import 'package:storygram/helpers/on_tap_likes_count.dart';
 import 'package:storygram/helpers/on_tap_save_btn.dart';
-import 'package:storygram/providers/post_provider.dart';
+import 'package:storygram/global_providers/post_provider.dart';
 import 'package:storygram/saved_posts/providers/saved_post_provider.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/post_card.dart';

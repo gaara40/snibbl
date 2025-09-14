@@ -13,7 +13,7 @@ import 'package:storygram/widgets/social_login_button.dart';
 import 'package:storygram/constants/assets.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
-import 'package:storygram/providers/auth_providers.dart';
+import 'package:storygram/global_providers/auth_providers.dart';
 import 'package:storygram/services/auth_services.dart';
 import 'package:storygram/themes/app_theme.dart';
 

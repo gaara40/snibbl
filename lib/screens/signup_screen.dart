@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:storygram/providers/auth_providers.dart';
+import 'package:storygram/global_providers/auth_providers.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/email_text_field.dart';
 import 'package:storygram/widgets/password_text_field.dart';

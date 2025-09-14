@@ -97,7 +97,6 @@ class PostCard extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: textAlignment,
-                overflow: TextOverflow.ellipsis,
                 maxLines: 8,
                 style: GoogleFonts.getFont(
                   fontStyle,

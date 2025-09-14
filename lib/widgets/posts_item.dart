@@ -97,7 +97,7 @@ class _PostsItemState extends ConsumerState<PostsItem> {
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         fontSize: (data['fontSize'] ?? 18).toDouble(),
         fontStyle: data['fontStyle'] ?? 'poppins',
-        textAlignment: _mapAlignment(data['textAlign']),
+        textAlignment: _mapAlignment(data['textAlignment']),
         isBold: data['isBold'] ?? false,
         likes: likesList,
         likesCount: likesList.length.toString(),
@@ -131,14 +131,19 @@ class _PostsItemState extends ConsumerState<PostsItem> {
   TextAlign _mapAlignment(String? textAlign) {
     switch (textAlign) {
       case "TextAlign.center":
+      case "center":
         return TextAlign.center;
 
       case "TextAlign.right":
+      case "right":
         return TextAlign.right;
 
       case "TextAlign.justify":
+      case "justify":
         return TextAlign.justify;
 
+      case "TextAlign.left":
+      case "left":
       default:
         return TextAlign.left;
     }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/comments/providers/comment_count_provider.dart';
 import 'package:storygram/comments/providers/current_user_username_provider.dart';
+import 'package:storygram/helpers/on_like_tap_btn.dart';
 import 'package:storygram/helpers/on_tap_comment_btn.dart';
 import 'package:storygram/helpers/on_tap_likes_count.dart';
 import 'package:storygram/helpers/on_tap_save_btn.dart';
@@ -100,23 +101,8 @@ class _PostsItemState extends ConsumerState<PostsItem> {
         likes: likesList,
         likesCount: likesList.length.toString(),
         isLiked: isLiked,
-        onLikeTap: () async {
-          final postRef = FirebaseFirestore.instance
-              .collection('posts')
-              .doc(widget.postId);
-
-          if (isLiked) {
-            // unlike
-            await postRef.update({
-              'likes': FieldValue.arrayRemove([currentUser!.email]),
-            });
-          } else {
-            // like
-            await postRef.update({
-              'likes': FieldValue.arrayUnion([currentUser!.email]),
-            });
-          }
-
+        onLikeTap: () {
+          onLikeTapBtn(context, isLiked, widget.postId);
           setState(() {
             isLiked = !isLiked;
           });

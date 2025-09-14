@@ -23,7 +23,12 @@ Future<double?> showFontSizePicker(
       return StatefulBuilder(
         builder: (ctx, setSheet) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(15, 30, 15, 15),
+            padding: const EdgeInsets.fromLTRB(
+              15,
+              30,
+              15,
+              kBottomNavigationBarHeight + 5,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

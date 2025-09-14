@@ -22,7 +22,12 @@ Future<TextAlign?> showAlignmentPicker(
       return StatefulBuilder(
         builder: (ctx, setSheet) {
           return Padding(
-            padding: EdgeInsets.fromLTRB(15, 30, 15, 15),
+            padding: EdgeInsets.fromLTRB(
+              15,
+              30,
+              15,
+              kBottomNavigationBarHeight + 5,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

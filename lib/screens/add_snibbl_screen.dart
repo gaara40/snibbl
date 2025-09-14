@@ -166,11 +166,11 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                     child: Column(
                       children: [
                         Container(
-                          height: 500,
+                          height: 450,
 
                           decoration: BoxDecoration(
-                            color: AppTheme.loadingCardColor,
-                            border: Border(),
+                            border: Border.all(),
+
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
                           child: Padding(
@@ -216,7 +216,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 12),
+                        SizedBox(height: 15),
 
                         //text-editing bar
                         Container(

@@ -9,7 +9,7 @@ class AuthServices {
   final _firebaseFirestore = FirebaseFirestore.instance;
 
   //current user email
-  currentUserEmail() {
+  String? currentUserEmail() {
     return _firebaseAuth.currentUser!.email;
   }
 

@@ -21,11 +21,45 @@ class CommentRepository {
   }
 
   /// Post a new comment
+  // Future<void> postComment(String postId, CommentModel comment) async {
+  //   await _firestore
+  //       .collection('posts')
+  //       .doc(postId)
+  //       .collection('comments')
+  //       .add(comment.toMap());
+  // }
+
   Future<void> postComment(String postId, CommentModel comment) async {
-    await _firestore
-        .collection('posts')
-        .doc(postId)
+    final postRef = _firestore.collection('posts').doc(postId);
+
+    //Add comment
+    final commentRef = await postRef
         .collection('comments')
         .add(comment.toMap());
+
+    //Fetch post to know owner
+    final postSnap = await postRef.get();
+    if (!postSnap.exists) return;
+
+    final postOwnerId = postSnap['userId'];
+
+    //Creating deterministic activityId
+    final activityId = '${postId}_${commentRef.id}';
+
+    // 4. Add activity
+    await _firestore
+        .collection('users')
+        .doc(postOwnerId)
+        .collection('activities')
+        .doc(activityId)
+        .set({
+          'type': 'comment',
+          'fromUserId': comment.userId,
+          'fromUsername': comment.username,
+          'postId': postId,
+          'commentId': commentRef.id,
+          'message': '${comment.username} commented: ${comment.comment}',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
   }
 }

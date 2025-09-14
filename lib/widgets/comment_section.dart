@@ -41,14 +41,14 @@ class _CommentSectionState extends ConsumerState<CommentSection> {
 
     // Check if the input is empty
     if (text.isEmpty) {
-      debugPrint("⚠ No comment entered");
+      debugPrint("No comment entered");
       return;
     }
 
-    debugPrint("🟢 Posting comment: $text");
-    debugPrint("📌 postId: ${widget.postId}");
-    debugPrint("👤 currentUserId: ${widget.currentUserId}");
-    debugPrint("👤 username: ${widget.username}");
+    debugPrint("Posting comment: $text");
+    debugPrint("postId: ${widget.postId}");
+    debugPrint("currentUserId: ${widget.currentUserId}");
+    debugPrint("username: ${widget.username}");
 
     try {
       final comment = CommentModel(
@@ -63,14 +63,14 @@ class _CommentSectionState extends ConsumerState<CommentSection> {
           .read(commentRepositoryProvider)
           .postComment(widget.postId, comment);
 
-      debugPrint("✅ Comment posted successfully!");
+      debugPrint("Comment posted successfully!");
 
       _commentController.clear();
       if (mounted) {
         FocusScope.of(context).unfocus();
       }
     } catch (e, s) {
-      debugPrint("❌ Failed to post comment: $e");
+      debugPrint("Failed to post comment: $e");
       debugPrint("STACKTRACE: $s");
       showToast("Error posting comment: $e");
     }

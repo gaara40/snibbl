@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:storygram/global_providers/auth_providers.dart';
 
 final currentUserUsernameProvider = FutureProvider<String>((ref) async {
-  final currentUser = FirebaseAuth.instance.currentUser;
+  final currentUser = await ref.watch(authStateProvider.future);
 
   if (currentUser == null) {
     return 'Anonymous';

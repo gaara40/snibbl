@@ -74,6 +74,7 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
     //Current User Username
     final username = userAsync.value ?? 'Anonymous';
+    debugPrint('Current USername: $username');
 
     //Comments Count
     final commentCount = commentCountAsync.value ?? 0;

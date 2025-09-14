@@ -13,6 +13,11 @@ class AuthServices {
     return _firebaseAuth.currentUser!.email;
   }
 
+  //current user ID
+  String? currentUserId() {
+    return _firebaseAuth.currentUser!.uid;
+  }
+
   //signup with email and password
   Future<UserCredential?> signUpWithEmail(
     String email,

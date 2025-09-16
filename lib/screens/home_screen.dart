@@ -24,7 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: SizedBox(
-                height: 50,
+                height: 45,
                 child: Image.asset(AppAssets.appNameLogo, fit: BoxFit.contain),
               ),
             ),

@@ -9,6 +9,7 @@ class ActivityScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final authServices = ref.read(authServiceProvider);
 
     final currentUserId = authServices.currentUserId();
@@ -23,12 +24,19 @@ class ActivityScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: SizedBox(
-                height: 50,
+                height: 45,
                 child: Image.asset(AppAssets.appNameLogo, fit: BoxFit.contain),
               ),
             ),
 
-            SizedBox(height: 10),
+            SizedBox(height: 5),
+
+            Center(
+              child: Text(
+                'Activity',
+                style: theme.textTheme.headlineSmall!.copyWith(fontSize: 15),
+              ),
+            ),
 
             Expanded(
               //FEED

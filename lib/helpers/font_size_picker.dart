@@ -7,7 +7,7 @@ Future<double?> showFontSizePicker(
   required double currentFontSize,
   required String currentFontStyle,
   double min = 12,
-  double max = 32,
+  double max = 30,
 }) {
   return showModalBottomSheet<double>(
     context: context,
@@ -18,7 +18,7 @@ Future<double?> showFontSizePicker(
     builder: (ctx) {
       // local temp state that only lives inside the sheet
       double temp = currentFontSize.clamp(min, max);
-      final presets = <double>[12, 14, 16, 18, 20, 24, 28, 30, 32];
+      final presets = <double>[12, 14, 16, 18, 20, 24, 28, 30];
 
       return StatefulBuilder(
         builder: (ctx, setSheet) {

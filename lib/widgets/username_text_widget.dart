@@ -4,14 +4,16 @@ import 'package:storygram/global_providers/username_provider.dart';
 import 'package:storygram/themes/app_theme.dart';
 
 class UsernameTextWidget extends ConsumerWidget {
-  const UsernameTextWidget({super.key});
+  const UsernameTextWidget(this.fontSize, {super.key});
+
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usernameAsync = ref.watch(usernameProvider);
 
     return usernameAsync.when(
-      data: (username) => Text(username),
+      data: (username) => Text(username, style: TextStyle(fontSize: fontSize)),
       error: (e, _) => const Text('error_occured'),
       loading:
           () => Container(

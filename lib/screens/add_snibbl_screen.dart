@@ -115,55 +115,55 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //logo
-              SizedBox(height: 50, child: Image.asset(AppAssets.appNameLogo)),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //logo
+                SizedBox(height: 50, child: Image.asset(AppAssets.appNameLogo)),
 
-              SizedBox(height: 40),
+                SizedBox(height: 40),
 
-              //headlines
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 10),
-                    child: SizedBox(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Add a Snibbl',
-                            style: theme.textTheme.headlineLarge?.copyWith(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              onPost();
-                            },
-                            child: Text(
-                              'Post',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                //headlines
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, right: 10),
+                      child: SizedBox(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Add a Snibbl',
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                        ],
+                            GestureDetector(
+                              onTap: () {
+                                onPost();
+                              },
+                              child: Text(
+                                'Post',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  SizedBox(height: 8),
+                    SizedBox(height: 8),
 
-                  SingleChildScrollView(
-                    child: Column(
+                    Column(
                       children: [
                         Container(
                           height: 450,
@@ -174,7 +174,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(2),
 
                             //TEXTFIELD
                             child: TextField(
@@ -325,10 +325,10 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

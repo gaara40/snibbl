@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:storygram/themes/app_theme.dart';
 
 class PostCard extends StatelessWidget {
   const PostCard({
@@ -46,7 +47,7 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      height: 400,
+      height: 300,
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -61,8 +62,10 @@ class PostCard extends StatelessWidget {
                 //USERNAME LOGO
                 CircleAvatar(
                   radius: 18,
+                  backgroundColor: AppTheme.tertiaryColor,
                   child: Text(
                     username.isNotEmpty ? username[0].toUpperCase() : 'NA',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(width: 10),

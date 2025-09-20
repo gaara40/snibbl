@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storygram/constants/assets.dart';
+import 'package:storygram/widgets/app_bar_logo.dart';
 import 'package:storygram/widgets/posts_item.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -21,13 +21,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //LOGO
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: SizedBox(
-                height: 45,
-                child: Image.asset(AppAssets.appNameLogo, fit: BoxFit.contain),
-              ),
-            ),
+            const AppBarLogo(),
 
             SizedBox(height: 10),
 

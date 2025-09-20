@@ -42,6 +42,7 @@ class _PostsItemState extends ConsumerState<PostsItem> {
         userAsync.isLoading ||
         commentCountAsync.isLoading) {
       return Container(
+        //Loading State
         height: 400,
         decoration: BoxDecoration(
           color: AppTheme.loadingCardColor.withValues(alpha: 0.5),

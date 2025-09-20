@@ -1,14 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import 'package:storygram/constants/assets.dart';
+import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/global_providers/auth_providers.dart';
 import 'package:storygram/themes/app_theme.dart';
-import 'package:storygram/widgets/profile_post_item.dart';
+import 'package:storygram/widgets/app_bar_logo.dart';
+import 'package:storygram/widgets/my_snibbls_tab.dart';
+import 'package:storygram/widgets/profile_posts_tab_item.dart';
+import 'package:storygram/widgets/saved_posts_tab.dart';
 import 'package:storygram/widgets/saved_posts_widget.dart';
 import 'package:storygram/widgets/username_text_widget.dart';
 
@@ -20,6 +21,9 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  //Posts Tab Index
+  int selectedIndexTab = 0;
+
   //Logout Logic
   void logoutLogic() async {
     final authServices = ref.read(authServiceProvider);
@@ -40,14 +44,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //Current User Id
-    final currentUser = FirebaseAuth.instance.currentUser;
-
-    final userPostsQuery = FirebaseFirestore.instance
-        .collection('posts')
-        .where('userId', isEqualTo: currentUser?.uid)
-        .orderBy('createdAt', descending: true);
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -55,21 +51,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-            //App Logo
+            //Custom AppBar
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                  child: SizedBox(
-                    height: 45,
-                    child: Image.asset(
-                      AppAssets.appNameLogo,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
+                //App Logo
+                const AppBarLogo(),
+
                 Spacer(),
+
+                //Saved Posts and Logout Button
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
                   child: Row(
@@ -92,48 +83,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       IconButton(
                         icon: Icon(Icons.logout, size: 25),
                         onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Logout"),
-                                content: Text(
-                                  "Are you sure you want to logout?",
-                                ),
-                                actions: [
-                                  //Cancel Option
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(
-                                        context,
-                                      ).pop(); // close dialog
-                                    },
-                                    child: Text(
-                                      "No",
-                                      style: TextStyle(
-                                        color: AppTheme.onSecondaryColor,
-                                      ),
-                                    ),
-                                  ),
-
-                                  //Logout Option
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-
-                                      logoutLogic();
-                                    },
-                                    child: Text(
-                                      "Yes",
-                                      style: TextStyle(
-                                        color: AppTheme.onSecondaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          showLogoutDialog(context, logoutLogic);
                         },
                       ),
                     ],
@@ -157,12 +107,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
 
-            SizedBox(height: 8),
+            SizedBox(height: 5),
 
             //Username Of The User
-            Center(child: UsernameTextWidget(22, FontWeight.bold)),
-
-            SizedBox(height: 2),
+            Center(child: UsernameTextWidget(25, FontWeight.bold)),
 
             //Short Bio Of The User
             Center(
@@ -204,65 +152,38 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    //My Posts
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppTheme.tertiaryColor,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(15),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "My Snibbl's",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
+                  //CurrentUser's Posts
+                  ProfilePostsTabItem(
+                    label: "My Snibbl's",
+                    isSelected: selectedIndexTab == 0,
+                    onTap:
+                        () => setState(() {
+                          selectedIndexTab = 0;
+                        }),
                   ),
 
                   SizedBox(width: 5),
 
-                  //Posts Liked By Me
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppTheme.tertiaryColor,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(15),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Liked by me",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
+                  //Posts Liked By CurrentUser
+                  ProfilePostsTabItem(
+                    label: "Liked ",
+                    isSelected: selectedIndexTab == 1,
+                    onTap:
+                        () => setState(() {
+                          selectedIndexTab = 1;
+                        }),
                   ),
 
                   SizedBox(width: 5),
 
-                  //Posts Saved By Me
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppTheme.tertiaryColor,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(15),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Saved",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
+                  //Posts Saved By CurrentUser
+                  ProfilePostsTabItem(
+                    label: "Saved",
+                    isSelected: selectedIndexTab == 2,
+                    onTap:
+                        () => setState(() {
+                          selectedIndexTab = 2;
+                        }),
                   ),
                 ],
               ),
@@ -270,7 +191,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
             SizedBox(height: 4),
 
-            //Displaying Posts
+            //Displaying Currents User's Posts
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(
@@ -279,29 +200,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   6,
                   kBottomNavigationBarHeight + 4,
                 ),
-                child: StreamBuilder(
-                  stream: userPostsQuery.snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    final postDocs = snapshot.data!.docs;
-
-                    return GridView.builder(
-                      itemCount: postDocs.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 2,
-                        crossAxisSpacing: 2,
-                      ),
-                      itemBuilder: (context, index) {
-                        final postId = postDocs[index].id;
-                        return ProfilePostItem(postId);
-                      },
-                    );
-                  },
-                ),
+                child:
+                    selectedIndexTab == 0
+                        ? const MySnibblsTab()
+                        : selectedIndexTab == 1
+                        ? const Center(
+                          child: Text('Liked Posts will appear here..'),
+                        )
+                        : const SavedPostsTab(),
               ),
             ),
           ],

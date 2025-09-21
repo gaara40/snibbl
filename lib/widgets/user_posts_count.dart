@@ -23,7 +23,7 @@ class UserPostsCount extends StatelessWidget {
           return const Text("..");
         }
         if (snapshot.hasError) {
-          return const Text("Error");
+          return const Text("0");
         }
 
         final count = snapshot.data?.count ?? 0;

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:storygram/constants/assets.dart';
 import 'package:storygram/helpers/alignment_picker.dart';
 import 'package:storygram/helpers/font_style_picker.dart';
 import 'package:storygram/helpers/snibbl_hints.dart';
@@ -14,6 +13,7 @@ import 'package:storygram/helpers/font_size_picker.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/services/upload_post_service.dart';
 import 'package:storygram/themes/app_theme.dart';
+import 'package:storygram/widgets/app_bar_logo.dart';
 
 class AddSnibblScreen extends ConsumerStatefulWidget {
   const AddSnibblScreen({super.key});
@@ -113,20 +113,20 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //logo
-                SizedBox(height: 50, child: Image.asset(AppAssets.appNameLogo)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //logo
+              const AppBarLogo(),
 
-                SizedBox(height: 40),
+              SizedBox(height: 20),
 
-                //headlines
-                Column(
+              //headlines
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
@@ -161,7 +161,7 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 8),
+                    SizedBox(height: 5),
 
                     Column(
                       children: [
@@ -327,8 +327,8 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

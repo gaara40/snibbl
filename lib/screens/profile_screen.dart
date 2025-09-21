@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
-import 'package:storygram/widgets/liked_posts_count.dart';
-import 'package:storygram/widgets/liked_posts_tab.dart';
-import 'package:storygram/widgets/user_posts_count.dart';
+import 'package:storygram/liked_posts/widgets/liked_posts_count.dart';
+import 'package:storygram/liked_posts/widgets/liked_posts_tab.dart';
+import 'package:storygram/user_posts/widgets/user_posts_count.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/global_providers/auth_providers.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/app_bar_logo.dart';
-import 'package:storygram/widgets/my_snibbls_tab.dart';
+import 'package:storygram/user_posts/widgets/my_snibbls_tab.dart';
 import 'package:storygram/widgets/profile_posts_tab_item.dart';
-import 'package:storygram/widgets/saved_posts_tab.dart';
-import 'package:storygram/widgets/user_saved_posts_count.dart';
+import 'package:storygram/saved_posts/widgets/saved_posts_tab.dart';
+import 'package:storygram/saved_posts/widgets/user_saved_posts_count.dart';
 import 'package:storygram/widgets/username_text_widget.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -119,7 +119,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(children: [UserPostsCount(), Text("Snibbl's")]),
+                  Column(children: [UserPostsCount(), Text("Snibbls")]),
                   SizedBox(width: 40),
                   Container(width: 1, height: 30, color: AppTheme.primaryColor),
                   SizedBox(width: 40),
@@ -142,7 +142,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   //CurrentUser's Posts
                   ProfilePostsTabItem(
-                    label: "My Snibbl's",
+                    label: "My Snibbls",
                     isSelected: selectedIndexTab == 0,
                     onTap:
                         () => setState(() {

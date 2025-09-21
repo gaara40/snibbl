@@ -25,6 +25,15 @@ class MySnibblsTab extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Text(
+              "No Snibbls yet!\nTap + below to add one",
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+
         final postDocs = snapshot.data!.docs;
 
         return ListView.separated(

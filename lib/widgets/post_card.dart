@@ -97,14 +97,17 @@ class PostCard extends StatelessWidget {
 
             //POST-TEXT
             Expanded(
-              child: Text(
-                text,
-                textAlign: textAlignment,
-                maxLines: 8,
-                style: GoogleFonts.getFont(
-                  fontStyle,
-                  fontSize: fontSize,
-                  fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  text,
+                  textAlign: textAlignment,
+                  maxLines: 8,
+                  style: GoogleFonts.getFont(
+                    fontStyle,
+                    fontSize: fontSize,
+                    fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+                  ),
                 ),
               ),
             ),

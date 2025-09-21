@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
+import 'package:storygram/widgets/liked_posts_count.dart';
+import 'package:storygram/widgets/liked_posts_tab.dart';
 import 'package:storygram/widgets/user_posts_count.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/global_providers/auth_providers.dart';
@@ -101,7 +103,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             //Short Bio Of The User
             Center(
               child: Text(
-                '"Here comes the bio of user"',
+                '"Here comes your short bio"',
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                   color: AppTheme.onSecondaryColor.withValues(alpha: 0.8),
@@ -121,7 +123,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   SizedBox(width: 40),
                   Container(width: 1, height: 30, color: AppTheme.primaryColor),
                   SizedBox(width: 40),
-                  Column(children: [Text('0'), Text("Liked")]),
+                  Column(children: [LikedPostsCount(), Text("Liked")]),
                   SizedBox(width: 40),
                   Container(width: 1, height: 30, color: AppTheme.primaryColor),
                   SizedBox(width: 40),
@@ -190,12 +192,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     selectedIndexTab == 0
                         ? const MySnibblsTab()
                         : selectedIndexTab == 1
-                        ? const Center(
-                          child: Text(
-                            'Liked Posts will appear here\n🚀 This feature will be available soon 🚀',
-                            textAlign: TextAlign.center,
-                          ),
-                        )
+                        ? const LikedPostsTab()
                         : const SavedPostsTab(),
               ),
             ),

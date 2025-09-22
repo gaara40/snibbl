@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storygram/helpers/logout_dialog.dart';
-import 'package:storygram/helpers/toasts.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:storygram/liked_posts/widgets/liked_posts_count.dart';
 import 'package:storygram/liked_posts/widgets/liked_posts_tab.dart';
+import 'package:storygram/settings_page/settings_page.dart';
 import 'package:storygram/user_posts/widgets/user_posts_count.dart';
-import 'package:storygram/main.dart';
-import 'package:storygram/global_providers/auth_providers.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/app_bar_logo.dart';
 import 'package:storygram/user_posts/widgets/my_snibbls_tab.dart';
@@ -25,24 +23,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   //Posts Tab Index
   int selectedIndexTab = 0;
-
-  //Logout Logic
-  void logoutLogic() async {
-    final authServices = ref.read(authServiceProvider);
-    try {
-      // Sign Out
-      await authServices.signOut();
-
-      if (!mounted) return;
-      // Navigate Back To Login
-      navigatorKey.currentState!.pushNamedAndRemoveUntil(
-        '/loginScreen',
-        (route) => false,
-      );
-    } catch (e) {
-      showToast('Error signing out: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +49,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     children: [
                       // Logout Button
                       IconButton(
-                        icon: Icon(Icons.logout, size: 25),
+                        icon: Icon(Icons.settings, size: 25),
                         onPressed: () {
-                          showLogoutDialog(context, logoutLogic);
+                          PersistentNavBarNavigator.pushNewScreen(
+                            context,
+                            screen: SettingsPage(),
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.cupertino,
+                          );
                         },
                       ),
                     ],

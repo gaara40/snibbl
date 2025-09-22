@@ -21,6 +21,9 @@ class AppTheme {
   //loading state card color
   static const Color loadingCardColor = Color.fromARGB(255, 244, 220, 183);
 
+  //bottom navigation bar color
+  static const Color bottomNavBarColor = Color.fromARGB(255, 254, 249, 220);
+
   static final lightTheme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme(

@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
     return PersistentTabView(
       context,
       controller: _controller,
-      backgroundColor: const Color.fromARGB(255, 254, 249, 220),
+      backgroundColor: AppTheme.bottomNavBarColor,
       screens: const [
         HomeScreen(),
         SearchExploreScreen(),

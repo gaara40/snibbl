@@ -6,6 +6,7 @@ import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/settings_page/widgets.dart/setting_tile_card.dart';
 import 'package:storygram/themes/app_theme.dart';
+import 'package:storygram/widgets/username_text_widget.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -55,13 +56,20 @@ class SettingsPage extends ConsumerWidget {
                 const SizedBox(height: 10),
                 SettingTileCard(
                   icon: Icons.person_outline,
-                  title: 'Edit Username',
+                  title: 'Username',
+                  subTitle: UsernameTextWidget(14, FontWeight.w500),
+                  trailingText: 'Edit',
                   onTap: () {},
                 ),
 
                 SettingTileCard(
                   icon: Icons.info_outline,
-                  title: 'Edit Bio',
+                  title: 'Bio',
+                  subTitle: Text(
+                    'Your bio',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                  trailingText: 'Edit',
                   onTap: () {},
                 ),
               ],

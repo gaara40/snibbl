@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:storygram/saved_posts/providers/saved_post_provider.dart';
+import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/posts_item.dart';
 
 class SavedPostsTab extends ConsumerWidget {
@@ -14,10 +15,13 @@ class SavedPostsTab extends ConsumerWidget {
     return savedPostsAsync.when(
       data: (savedPostIds) {
         if (savedPostIds.isEmpty) {
-          return const Center(
+          return Center(
             child: Text(
               "No saved posts yet",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 15,
+                color: AppTheme.onPrimaryColor.withValues(alpha: 0.6),
+              ),
             ),
           );
         }

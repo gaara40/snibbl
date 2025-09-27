@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/posts_item.dart';
 
 class MySnibblsTab extends StatelessWidget {
@@ -30,6 +31,10 @@ class MySnibblsTab extends StatelessWidget {
             child: Text(
               "No Snibbls yet!\nTap + below to add one",
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: AppTheme.onPrimaryColor.withValues(alpha: 0.6),
+              ),
             ),
           );
         }

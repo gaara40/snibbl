@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/posts_item.dart';
 
 class LikedPostsTab extends StatelessWidget {
@@ -23,7 +24,15 @@ class LikedPostsTab extends StatelessWidget {
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text("You haven't liked any posts yet"));
+          return Center(
+            child: Text(
+              "You haven't liked any posts yet",
+              style: TextStyle(
+                fontSize: 15,
+                color: AppTheme.onPrimaryColor.withValues(alpha: 0.6),
+              ),
+            ),
+          );
         }
 
         final postDocs = snapshot.data!.docs;

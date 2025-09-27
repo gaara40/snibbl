@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/comments/providers/comment_count_provider.dart';
-import 'package:storygram/comments/providers/current_user_username_provider.dart';
+import 'package:storygram/global_providers/username_provider.dart';
 import 'package:storygram/helpers/on_like_tap_btn.dart';
 import 'package:storygram/helpers/on_tap_comment_btn.dart';
 import 'package:storygram/helpers/on_tap_likes_count.dart';
@@ -30,7 +30,7 @@ class _PostsItemState extends ConsumerState<PostsItem> {
   @override
   Widget build(BuildContext context) {
     //Current UserName Provider
-    final userAsync = ref.watch(currentUserUsernameProvider);
+    final userAsync = ref.watch(usernameProvider);
 
     //Post Provider
     final postSnapshot = ref.watch(postProvider(widget.postId));

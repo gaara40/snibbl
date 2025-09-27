@@ -19,7 +19,7 @@ class UsernameTextWidget extends ConsumerWidget {
             username,
             style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
           ),
-      error: (e, _) => const Text('error_occured'),
+      error: (e, _) => const Text('error'),
       loading:
           () => Container(
             decoration: BoxDecoration(
@@ -51,7 +51,7 @@ class LogoUsername extends ConsumerWidget {
           style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
         );
       },
-      error: (e, _) => const Text('error_occured'),
+      error: (e, _) => const Text('error'),
       loading:
           () => Container(
             decoration: BoxDecoration(

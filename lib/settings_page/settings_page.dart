@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/global_providers/auth_providers.dart';
-import 'package:storygram/global_providers/user_provider.dart';
+import 'package:storygram/global_providers/userservices_provider.dart';
 import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
@@ -167,12 +167,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       });
                     },
                     title: 'Edit Username',
-                    hintText: 'New Username',
+                    hintText: 'What should we call you?',
+                    labelText: 'New Username',
                   )
                   //Bio Editing Overlay
                   : _showEditBio
                   ? EditOverlay(
                     key: const ValueKey('edit_bio_overlay'),
+
+                    isEditBio: true,
+
                     onCancelTap: () {
                       setState(() {
                         _showEditBio = false;
@@ -185,7 +189,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       });
                     },
                     title: 'Edit Bio',
-                    hintText: 'New Bio',
+                    hintText: 'A few words that describe you…',
+                    labelText: 'Your Bio',
                   )
                   : const SizedBox.shrink(key: ValueKey('edit_overlay_empty')),
         ),

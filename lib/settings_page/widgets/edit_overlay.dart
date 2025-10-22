@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:storygram/themes/app_theme.dart';
 
 class EditOverlay extends StatelessWidget {
   const EditOverlay({
@@ -10,10 +11,16 @@ class EditOverlay extends StatelessWidget {
     required this.onSave,
     required this.title,
     required this.hintText,
+    required this.labelText,
+
+    this.isEditBio = false,
   });
 
   final String title;
   final String hintText;
+  final String labelText;
+
+  final bool isEditBio;
 
   final VoidCallback onCancelTap;
   final ValueChanged<String> onSave;
@@ -62,10 +69,21 @@ class EditOverlay extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 18),
                       TextField(
+                        maxLength: isEditBio ? 80 : 20,
+
                         controller: textController,
-                        decoration: InputDecoration(labelText: hintText),
+                        decoration: InputDecoration(
+                          hintText: hintText,
+                          labelText: labelText,
+                          hintStyle: TextStyle(
+                            color: AppTheme.onPrimaryColor.withValues(
+                              alpha: 0.7,
+                            ),
+                            fontSize: 15,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(

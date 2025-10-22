@@ -1,11 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/global_providers/auth_providers.dart';
+import 'package:storygram/global_providers/user_provider.dart';
 import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
-import 'package:storygram/settings_page/widgets.dart/edit_overlay.dart';
-import 'package:storygram/settings_page/widgets.dart/setting_tile_card.dart';
+import 'package:storygram/settings_page/widgets/edit_overlay.dart';
+import 'package:storygram/settings_page/widgets/setting_tile_card.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/username_text_widget.dart';
 
@@ -23,6 +25,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final authServices = ref.read(authServiceProvider);
+
+    //Current user ID
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     // Logout Logic
     Future<void> logoutLogic() async {
@@ -149,6 +154,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       });
                     },
                     onSave: (value) {
+                      if (value.trim().isEmpty) {
+                        showToast('Username cannot be empty');
+                        return;
+                      }
+                      ref
+                          .read(userServicesProvider)
+                          .updateUsername(currentUserId, value.trim());
                       debugPrint('Username is saved as: $value');
                       setState(() {
                         _showEditUsername = false;

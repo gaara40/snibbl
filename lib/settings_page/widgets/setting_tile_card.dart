@@ -40,7 +40,7 @@ class SettingTileCard extends StatelessWidget {
                   ),
                 )
                 : null,
-        // If no trailing text → full tile tap works
+        // If no trailing text -> full tile tap works
         onTap: trailingText == null ? onTap : null,
       ),
     );

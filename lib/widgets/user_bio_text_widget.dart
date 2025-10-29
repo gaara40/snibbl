@@ -29,6 +29,7 @@ class UserBioTextWidget extends ConsumerWidget {
               fontSize: fontSize,
               fontWeight: fontWeight,
               fontStyle: fontStyle,
+              color: AppTheme.onSecondaryColor.withValues(alpha: 0.8),
             ),
           ),
       error: (e, _) => const Text('error'),

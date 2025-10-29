@@ -36,7 +36,7 @@ class EditOverlay extends StatelessWidget {
             child: Container(color: Colors.black.withValues(alpha: 0.3)),
           ),
 
-          //Edit Username Card
+          //Edit Card
           Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),

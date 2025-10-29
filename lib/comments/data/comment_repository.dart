@@ -20,15 +20,6 @@ class CommentRepository {
         );
   }
 
-  /// Post a new comment
-  // Future<void> postComment(String postId, CommentModel comment) async {
-  //   await _firestore
-  //       .collection('posts')
-  //       .doc(postId)
-  //       .collection('comments')
-  //       .add(comment.toMap());
-  // }
-
   Future<void> postComment(String postId, CommentModel comment) async {
     final postRef = _firestore.collection('posts').doc(postId);
 
@@ -46,7 +37,7 @@ class CommentRepository {
     //Creating deterministic activityId
     final activityId = '${postId}_${commentRef.id}';
 
-    // 4. Add activity
+    // Adding activity
     await _firestore
         .collection('users')
         .doc(postOwnerId)

@@ -11,6 +11,7 @@ import 'package:storygram/user_posts/widgets/my_snibbls_tab.dart';
 import 'package:storygram/widgets/profile_posts_tab_item.dart';
 import 'package:storygram/saved_posts/widgets/saved_posts_tab.dart';
 import 'package:storygram/saved_posts/widgets/user_saved_posts_count.dart';
+import 'package:storygram/widgets/user_bio_text_widget.dart';
 import 'package:storygram/widgets/username_text_widget.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -87,13 +88,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
             //Short Bio Of The User
             Center(
-              child: Text(
-                '"Here comes your short bio"',
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  color: AppTheme.onSecondaryColor.withValues(alpha: 0.8),
-                ),
-              ),
+              child: UserBioTextWidget(14, FontWeight.normal, FontStyle.italic),
             ),
 
             SizedBox(height: 18),

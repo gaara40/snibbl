@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/global_providers/auth_providers.dart';
@@ -27,7 +26,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final authServices = ref.read(authServiceProvider);
 
     //Current user ID
-    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final currentUserId = authServices.currentUserId;
+
+    //Current Logged-In User
+    final currentUser = authServices.currentUser!;
+
+    //Check whether user is logged in via email and password
+    final isPasswordLoggedIn = currentUser.providerData.any(
+      (info) => info.providerId == 'password',
+    );
+
+    //Check whether user is logged in via google
+    final isGoogleSignedIn = currentUser.providerData.any(
+      (info) => info.providerId == 'gmail.com',
+    );
+
+    //Check whether user is a guest
+    // final isGuestUser = currentUser.isAnonymous;
 
     // Logout Logic
     Future<void> logoutLogic() async {
@@ -74,6 +89,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                     const SizedBox(height: 10),
                     SettingTileCard(
+                      enabled: isGoogleSignedIn || isPasswordLoggedIn,
                       icon: Icons.person_outline,
                       title: 'Username',
                       subTitle: UsernameTextWidget(14, FontWeight.w500),
@@ -85,6 +101,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       },
                     ),
                     SettingTileCard(
+                      enabled: isGoogleSignedIn || isPasswordLoggedIn,
                       icon: Icons.info_outline,
                       title: 'Bio',
                       subTitle: const Text(
@@ -117,16 +134,19 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                     const SizedBox(height: 10),
                     SettingTileCard(
+                      enabled: isPasswordLoggedIn,
                       icon: Icons.lock_outline,
                       title: 'Change Password',
                       onTap: () {},
                     ),
                     SettingTileCard(
+                      enabled: isGoogleSignedIn || isPasswordLoggedIn,
                       icon: Icons.delete_forever_outlined,
                       title: 'Permanently Delete Account',
                       onTap: () {},
                     ),
                     SettingTileCard(
+                      enabled: true,
                       icon: Icons.logout_outlined,
                       title: 'Logout',
                       onTap: () => showLogoutDialog(context, logoutLogic),

@@ -8,15 +8,15 @@ class AuthServices {
   final _firebaseAuth = FirebaseAuth.instance;
   final _firebaseFirestore = FirebaseFirestore.instance;
 
+  //current user
+  User? get currentUser => _firebaseAuth.currentUser;
+
   //current user email
-  String? currentUserEmail() {
-    return _firebaseAuth.currentUser!.email;
-  }
+  String get currentUserEmail =>
+      _firebaseAuth.currentUser?.email ?? 'guest_user';
 
   //current user ID
-  String? currentUserId() {
-    return _firebaseAuth.currentUser!.uid;
-  }
+  String get currentUserId => _firebaseAuth.currentUser?.uid ?? 'guest_user';
 
   //signup with email and password
   Future<UserCredential?> signUpWithEmail(

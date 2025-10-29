@@ -161,6 +161,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ref
                           .read(userServicesProvider)
                           .updateUsername(currentUserId, value.trim());
+                      showToast('Username Updated Successfully');
                       debugPrint('Username is saved as: $value');
                       setState(() {
                         _showEditUsername = false;
@@ -183,7 +184,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       });
                     },
                     onSave: (value) {
+                      if (value.trim().isEmpty) {
+                        showToast('Bio cannot be empty');
+                        return;
+                      }
+                      ref
+                          .read(userServicesProvider)
+                          .updateUserBio(currentUserId, value.trim());
+                      showToast('Bio Updated Successfully');
                       debugPrint('Bio is saved as :$value');
+
                       setState(() {
                         _showEditBio = false;
                       });

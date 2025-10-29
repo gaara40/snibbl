@@ -7,6 +7,7 @@ class SettingTileCard extends StatelessWidget {
   final Widget? subTitle;
   final VoidCallback? onTap;
   final String? trailingText;
+  final bool enabled;
 
   const SettingTileCard({
     super.key,
@@ -15,6 +16,7 @@ class SettingTileCard extends StatelessWidget {
     this.subTitle,
     this.onTap,
     this.trailingText,
+    required this.enabled,
   });
 
   @override
@@ -23,17 +25,23 @@ class SettingTileCard extends StatelessWidget {
       color: AppTheme.bottomNavBarColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
+        enabled: enabled,
         leading: Icon(icon),
         title: Text(title),
         subtitle: subTitle,
         trailing:
             trailingText != null
                 ? GestureDetector(
-                  onTap: onTap,
+                  onTap: enabled ? onTap : null,
                   child: Text(
                     trailingText!,
-                    style: const TextStyle(
-                      color: AppTheme.inverseSecondary,
+                    style: TextStyle(
+                      color:
+                          enabled
+                              ? AppTheme.inverseSecondary
+                              : AppTheme.inverseSecondary.withValues(
+                                alpha: 0.5,
+                              ),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),

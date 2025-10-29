@@ -18,7 +18,7 @@ class UserServices {
   Future<void> updateUserBio(String uid, String newUserBio) async {
     try {
       await _firestoreInstance.collection('users').doc(uid).update({
-        'Bio': newUserBio.trim(),
+        'bio': newUserBio.trim(),
       });
     } catch (e) {
       throw Exception('Failed to update bio: $e');

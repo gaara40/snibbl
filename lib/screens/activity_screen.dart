@@ -12,7 +12,7 @@ class ActivityScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final authServices = ref.read(authServiceProvider);
 
-    final currentUserId = authServices.currentUserId();
+    final currentUserId = authServices.currentUserId;
 
     return Scaffold(
       body: SafeArea(
@@ -47,7 +47,7 @@ class ActivityScreen extends ConsumerWidget {
                   6,
                   kBottomNavigationBarHeight + 4,
                 ),
-                child: ActivityItem(currentUserId!),
+                child: ActivityItem(currentUserId),
               ),
             ),
           ],

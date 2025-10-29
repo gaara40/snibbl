@@ -76,7 +76,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         debugPrint('Logged in successfully');
         if (!mounted) return;
 
-        final email = _authServices.currentUserEmail();
+        final email = _authServices.currentUserEmail;
         showToast('Welcome $email');
       }
       await Future.delayed(Duration(seconds: 2));

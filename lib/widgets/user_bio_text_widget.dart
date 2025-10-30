@@ -1,21 +1,13 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/global_providers/user_bio_provider.dart';
 import 'package:storygram/themes/app_theme.dart';
 
 class UserBioTextWidget extends ConsumerWidget {
-  const UserBioTextWidget(
-    this.fontSize,
-    this.fontWeight,
-    this.fontStyle, {
-    super.key,
-  });
+  const UserBioTextWidget(this.fontSize, this.fontWeight, {super.key});
 
   final double? fontSize;
   final FontWeight? fontWeight;
-  final FontStyle? fontStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,11 +16,11 @@ class UserBioTextWidget extends ConsumerWidget {
     return userBioAsync.when(
       data:
           (username) => Text(
-            '"$username"',
+            username,
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: fontWeight,
-              fontStyle: fontStyle,
+
               color: AppTheme.onSecondaryColor.withValues(alpha: 0.8),
             ),
           ),

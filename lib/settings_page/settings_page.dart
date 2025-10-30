@@ -38,7 +38,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     //Check whether user is logged in via google
     final isGoogleSignedIn = currentUser.providerData.any(
-      (info) => info.providerId == 'gmail.com',
+      (info) => info.providerId == 'google.com',
     );
 
     //Check whether user is a guest

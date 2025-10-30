@@ -5,6 +5,7 @@ import 'package:storygram/global_providers/userservices_provider.dart';
 import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
+import 'package:storygram/settings_page/helpers/change_password_dialog.dart';
 import 'package:storygram/settings_page/widgets/edit_overlay.dart';
 import 'package:storygram/settings_page/widgets/setting_tile_card.dart';
 import 'package:storygram/themes/app_theme.dart';
@@ -137,7 +138,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       enabled: isPasswordLoggedIn,
                       icon: Icons.lock_outline,
                       title: 'Change Password',
-                      onTap: () {},
+                      onTap:
+                          () => showChangePasswordDialog(context, currentUser),
                     ),
                     SettingTileCard(
                       enabled: isGoogleSignedIn || isPasswordLoggedIn,

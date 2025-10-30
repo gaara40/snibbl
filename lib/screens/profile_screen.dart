@@ -87,9 +87,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Center(child: UsernameTextWidget(25, FontWeight.bold)),
 
             //Short Bio Of The User
-            Center(
-              child: UserBioTextWidget(14, FontWeight.normal, FontStyle.italic),
-            ),
+            Center(child: UserBioTextWidget(14, FontWeight.normal)),
 
             SizedBox(height: 18),
 

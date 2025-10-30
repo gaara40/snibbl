@@ -9,6 +9,7 @@ import 'package:storygram/settings_page/helpers/change_password_dialog.dart';
 import 'package:storygram/settings_page/widgets/edit_overlay.dart';
 import 'package:storygram/settings_page/widgets/setting_tile_card.dart';
 import 'package:storygram/themes/app_theme.dart';
+import 'package:storygram/widgets/user_bio_text_widget.dart';
 import 'package:storygram/widgets/username_text_widget.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -105,10 +106,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       enabled: isGoogleSignedIn || isPasswordLoggedIn,
                       icon: Icons.info_outline,
                       title: 'Bio',
-                      subTitle: const Text(
-                        'Your bio',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
+                      subTitle: UserBioTextWidget(12, FontWeight.normal),
                       trailingText: 'Edit',
                       onTap: () {
                         setState(() {

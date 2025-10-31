@@ -7,6 +7,7 @@ import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/settings_page/helpers/change_password_dialog.dart';
 import 'package:storygram/settings_page/helpers/provider_data.dart';
+import 'package:storygram/settings_page/helpers/show_delete_account_dialog.dart';
 import 'package:storygram/settings_page/widgets/edit_overlay.dart';
 import 'package:storygram/settings_page/widgets/setting_tile_card.dart';
 import 'package:storygram/themes/app_theme.dart';
@@ -140,7 +141,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           isEmailPassSignedIn(currentUser),
                       icon: Icons.delete_forever_outlined,
                       title: 'Permanently Delete Account',
-                      onTap: () {},
+                      onTap: () {
+                        showDeleteAccountDialog(context, currentUser);
+                      },
                     ),
                     SettingTileCard(
                       enabled: true,

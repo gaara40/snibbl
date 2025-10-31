@@ -6,6 +6,7 @@ import 'package:storygram/helpers/logout_dialog.dart';
 import 'package:storygram/helpers/toasts.dart';
 import 'package:storygram/main.dart';
 import 'package:storygram/settings_page/helpers/change_password_dialog.dart';
+import 'package:storygram/settings_page/helpers/provider_data.dart';
 import 'package:storygram/settings_page/widgets/edit_overlay.dart';
 import 'package:storygram/settings_page/widgets/setting_tile_card.dart';
 import 'package:storygram/themes/app_theme.dart';
@@ -32,16 +33,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     //Current Logged-In User
     final currentUser = authServices.currentUser!;
-
-    //Check whether user is logged in via email and password
-    final isPasswordLoggedIn = currentUser.providerData.any(
-      (info) => info.providerId == 'password',
-    );
-
-    //Check whether user is logged in via google
-    final isGoogleSignedIn = currentUser.providerData.any(
-      (info) => info.providerId == 'google.com',
-    );
 
     //Check whether user is a guest
     // final isGuestUser = currentUser.isAnonymous;
@@ -91,7 +82,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                     const SizedBox(height: 10),
                     SettingTileCard(
-                      enabled: isGoogleSignedIn || isPasswordLoggedIn,
+                      enabled:
+                          isGoogleSignedIn(currentUser) ||
+                          isEmailPassSignedIn(currentUser),
                       icon: Icons.person_outline,
                       title: 'Username',
                       subTitle: UsernameTextWidget(14, FontWeight.w500),
@@ -103,7 +96,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       },
                     ),
                     SettingTileCard(
-                      enabled: isGoogleSignedIn || isPasswordLoggedIn,
+                      enabled:
+                          isGoogleSignedIn(currentUser) ||
+                          isEmailPassSignedIn(currentUser),
                       icon: Icons.info_outline,
                       title: 'Bio',
                       subTitle: UserBioTextWidget(12, FontWeight.normal),
@@ -133,14 +128,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                     const SizedBox(height: 10),
                     SettingTileCard(
-                      enabled: isPasswordLoggedIn,
+                      enabled: isEmailPassSignedIn(currentUser),
                       icon: Icons.lock_outline,
                       title: 'Change Password',
                       onTap:
                           () => showChangePasswordDialog(context, currentUser),
                     ),
                     SettingTileCard(
-                      enabled: isGoogleSignedIn || isPasswordLoggedIn,
+                      enabled:
+                          isGoogleSignedIn(currentUser) ||
+                          isEmailPassSignedIn(currentUser),
                       icon: Icons.delete_forever_outlined,
                       title: 'Permanently Delete Account',
                       onTap: () {},

@@ -82,6 +82,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+
+                    //Edit Username
                     SettingTileCard(
                       enabled:
                           isGoogleSignedIn(currentUser) ||
@@ -96,6 +98,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         });
                       },
                     ),
+
+                    //Edit Bio
                     SettingTileCard(
                       enabled:
                           isGoogleSignedIn(currentUser) ||
@@ -128,6 +132,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+
+                    //Change Password
                     SettingTileCard(
                       enabled: isEmailPassSignedIn(currentUser),
                       icon: Icons.lock_outline,
@@ -135,6 +141,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       onTap:
                           () => showChangePasswordDialog(context, currentUser),
                     ),
+
+                    //Permanently Delete Account
                     SettingTileCard(
                       enabled:
                           isGoogleSignedIn(currentUser) ||
@@ -145,6 +153,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         showDeleteAccountDialog(context, currentUser);
                       },
                     ),
+
+                    //Logout
                     SettingTileCard(
                       enabled: true,
                       icon: Icons.logout_outlined,

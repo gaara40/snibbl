@@ -6,9 +6,21 @@ class UserServices {
   //Update username
   Future<void> updateUsername(String uid, String newUsername) async {
     try {
+      //Update Username in Users Document in Firebase
       await _firestoreInstance.collection('users').doc(uid).update({
         'username': newUsername.trim(),
       });
+
+      //Update Username in Posts Document in Firebase
+      final postSnapshots =
+          await _firestoreInstance
+              .collection('posts')
+              .where('userId', isEqualTo: uid)
+              .get();
+
+      for (var postDoc in postSnapshots.docs) {
+        await postDoc.reference.update({'username': newUsername.trim()});
+      }
     } catch (e) {
       throw Exception('Failed to update username: $e');
     }

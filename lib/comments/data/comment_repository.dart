@@ -34,8 +34,19 @@ class CommentRepository {
 
     final postOwnerId = postSnap['userId'];
 
+    //Don't create activity if user comments on their own post
+    if (postOwnerId == comment.userId) return;
+
     //Creating deterministic activityId
     final activityId = '${postId}_${commentRef.id}';
+
+    final userDoc =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(comment.userId)
+            .get();
+
+    final fromUsername = userDoc.data()?['username'] ?? 'unknown_user';
 
     // Adding activity
     await _firestore
@@ -46,10 +57,10 @@ class CommentRepository {
         .set({
           'type': 'comment',
           'fromUserId': comment.userId,
-          'fromUsername': comment.username,
+          'fromUsername': fromUsername,
           'postId': postId,
           'commentId': commentRef.id,
-          'message': '${comment.username} commented: ${comment.comment}',
+          'message': '$fromUsername commented: ${comment.comment}',
           'createdAt': FieldValue.serverTimestamp(),
         });
   }

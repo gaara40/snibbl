@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CommentModel {
   final String id;
   final String userId;
-  final String username;
+
   final String comment;
   final DateTime timestamp;
 
   CommentModel({
     required this.id,
     required this.userId,
-    required this.username,
+
     required this.comment,
     required this.timestamp,
   });
@@ -20,7 +20,7 @@ class CommentModel {
     return CommentModel(
       id: id,
       userId: data['userId'] ?? '',
-      username: data['username'] ?? '',
+
       comment: data['comment'] ?? '',
       timestamp: (data['timestamp'] as Timestamp).toDate(),
     );
@@ -28,11 +28,6 @@ class CommentModel {
 
   // To Firebase document
   Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'username': username,
-      'comment': comment,
-      'timestamp': timestamp,
-    };
+    return {'userId': userId, 'comment': comment, 'timestamp': timestamp};
   }
 }

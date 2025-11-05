@@ -54,7 +54,6 @@ class _CommentSectionState extends ConsumerState<CommentSection> {
       final comment = CommentModel(
         id: '',
         userId: widget.currentUserId,
-        username: widget.username,
         comment: text,
         timestamp: DateTime.now(),
       );
@@ -127,8 +126,7 @@ class _CommentSectionState extends ConsumerState<CommentSection> {
                   itemBuilder: (context, index) {
                     final comment = comments[index];
                     return CommentCard(
-                      username: comment.username,
-                      avatar: comment.username[0],
+                      userId: comment.userId,
                       comment: comment.comment,
                     );
                   },

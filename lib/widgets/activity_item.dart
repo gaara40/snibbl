@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/global_providers/activity_provider.dart';
+import 'package:storygram/services/auth_services.dart';
 import 'package:storygram/widgets/activity_card.dart';
 
 class ActivityItem extends ConsumerStatefulWidget {
@@ -33,6 +34,14 @@ class _ActivityItemState extends ConsumerState<ActivityItem> {
 
             final createdAt = activity['createdAt'] as Timestamp;
             final timeAgo = _timeDifference(createdAt.toDate());
+
+            final currentUserId = AuthServices().currentUserId;
+
+            final fromUserId = activity['fromUserId'];
+
+            if (currentUserId == fromUserId) {
+              return Center(child: Text('No activity yet'));
+            }
 
             return ActivityCard(
               username: activity['fromUsername'],

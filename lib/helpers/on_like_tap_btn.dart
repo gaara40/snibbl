@@ -29,12 +29,11 @@ void onLikeTapBtn(BuildContext context, bool isLiked, String postId) async {
   //Activities Doc ID
   final activitesDocId = '${postId}_$currentUserId';
 
+  // Dislike Post
   if (isLiked) {
-    // unlike
-    await postRef.update({
-      'likes': FieldValue.arrayRemove([currentUser.email]),
-    });
+    await postRef.collection('likes').doc(currentUserId).delete();
 
+    //Delete User's like from the post-owner's activity
     if (postOwnerId != currentUserId) {
       await FirebaseFirestore.instance
           .collection('users')
@@ -43,12 +42,28 @@ void onLikeTapBtn(BuildContext context, bool isLiked, String postId) async {
           .doc(activitesDocId)
           .delete();
     }
-  } else {
-    // like
-    await postRef.update({
-      'likes': FieldValue.arrayUnion([currentUser.email]),
-    });
 
+    //Delete User's like from likedPosts
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserId)
+        .collection('likedPosts')
+        .doc(postId)
+        .delete();
+  } else
+  // Like Post
+  {
+    await postRef.collection('likes').doc(currentUserId).set({});
+
+    //Add Current user's liked posts
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserId)
+        .collection('likedPosts')
+        .doc(postId)
+        .set({});
+
+    //Add User's like to the post-owner's activity
     if (postOwnerId != currentUserId) {
       await FirebaseFirestore.instance
           .collection('users')

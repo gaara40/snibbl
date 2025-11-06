@@ -67,12 +67,6 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
     final data = postSnapshot.value!.data() as Map<String, dynamic>;
 
-    //List of Likes
-    final likesList = List<String>.from(data['likes'] ?? []);
-
-    //Checking if the current user has liked or not
-    isLiked = likesList.contains(currentUser!.email);
-
     //Current User Username
     final username = userAsync.value ?? 'Anonymous';
     debugPrint('Current USername: $username');
@@ -88,44 +82,75 @@ class _PostsItemState extends ConsumerState<PostsItem> {
 
     final isSaved = savedPosts.contains(widget.postId);
 
-    return GestureDetector(
-      //show full post(poem) on tapping the card
-      onTap: widget.onTap,
+    //Likes-Stream
+    final likesStream =
+        FirebaseFirestore.instance
+            .collection('posts')
+            .doc(widget.postId)
+            .collection('likes')
+            .snapshots();
 
-      child: PostCard(
-        username: data['username'] ?? 'undefined_user',
-        text: data['post'] ?? 'Nothing to read here:(',
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        fontSize: (data['fontSize'] ?? 18).toDouble(),
-        fontStyle: data['fontStyle'] ?? 'poppins',
-        textAlignment: _mapAlignment(data['textAlignment']),
-        isBold: data['isBold'] ?? false,
-        likes: likesList,
-        likesCount: likesList.length.toString(),
-        isLiked: isLiked,
-        onLikeTap: () {
-          onLikeTapBtn(context, isLiked, widget.postId);
-          setState(() {
-            isLiked = !isLiked;
-          });
-        },
-        onCommentTap: () {
-          onTapCommentBtn(
-            context,
-            postId: widget.postId,
-            currentUserId: currentUser!.uid,
-            username: username,
+    return StreamBuilder(
+      stream: likesStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            height: 400,
+            decoration: BoxDecoration(
+              color: AppTheme.loadingCardColor.withValues(alpha: 0.5),
+              border: Border.all(color: AppTheme.inverseSecondary),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
           );
-        },
-        onSaveTap: () {
-          onTapSaveBtn(context, isSaved, widget.postId);
-        },
-        commentCount: commentCount,
-        isSaved: isSaved,
-        onLikesCountTap: () {
-          onLikesCountTap(context, postId: widget.postId);
-        },
-      ),
+        }
+
+        //List Of User-Ids
+        final likedDocs = snapshot.data!.docs;
+        final likedUserIds = likedDocs.map((doc) => doc.id).toList();
+
+        //Check if current user liked the post
+        isLiked = likedUserIds.contains(currentUser!.uid);
+
+        return GestureDetector(
+          //show full post(poem) on tapping the card
+          onTap: widget.onTap,
+
+          child: PostCard(
+            username: data['username'] ?? 'undefined_user',
+            text: data['post'] ?? 'Nothing to read here:(',
+            createdAt: (data['createdAt'] as Timestamp).toDate(),
+            fontSize: (data['fontSize'] ?? 18).toDouble(),
+            fontStyle: data['fontStyle'] ?? 'poppins',
+            textAlignment: _mapAlignment(data['textAlignment']),
+            isBold: data['isBold'] ?? false,
+            likes: likedUserIds,
+            likesCount: likedUserIds.length.toString(),
+            isLiked: isLiked,
+            onLikeTap: () {
+              onLikeTapBtn(context, isLiked, widget.postId);
+              setState(() {
+                isLiked = !isLiked;
+              });
+            },
+            onCommentTap: () {
+              onTapCommentBtn(
+                context,
+                postId: widget.postId,
+                currentUserId: currentUser!.uid,
+                username: username,
+              );
+            },
+            onSaveTap: () {
+              onTapSaveBtn(context, isSaved, widget.postId);
+            },
+            commentCount: commentCount,
+            isSaved: isSaved,
+            onLikesCountTap: () {
+              onLikesCountTap(context, postId: widget.postId);
+            },
+          ),
+        );
+      },
     );
   }
 

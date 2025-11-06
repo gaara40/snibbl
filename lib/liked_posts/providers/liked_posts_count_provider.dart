@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storygram/services/auth_services.dart';
 
 final likedPostsCountProvider = StreamProvider<int>((ref) {
-  final email = FirebaseAuth.instance.currentUser?.email;
-  if (email == null) return const Stream.empty();
+  final currentUserId = AuthServices().currentUserId;
+
   return FirebaseFirestore.instance
-      .collection('posts')
-      .where('likes', arrayContains: email)
+      .collection('users')
+      .doc(currentUserId)
+      .collection('likedPosts')
       .snapshots()
       .map((snapshot) => snapshot.docs.length);
 });

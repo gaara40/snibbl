@@ -34,12 +34,15 @@ void onLikeTapBtn(BuildContext context, bool isLiked, String postId) async {
     await postRef.update({
       'likes': FieldValue.arrayRemove([currentUser.email]),
     });
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(postOwnerId)
-        .collection('activities')
-        .doc(activitesDocId)
-        .delete();
+
+    if (postOwnerId != currentUserId) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(postOwnerId)
+          .collection('activities')
+          .doc(activitesDocId)
+          .delete();
+    }
   } else {
     // like
     await postRef.update({

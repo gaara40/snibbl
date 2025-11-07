@@ -61,7 +61,7 @@ void onLikeTapBtn(BuildContext context, bool isLiked, String postId) async {
         .doc(currentUserId)
         .collection('likedPosts')
         .doc(postId)
-        .set({});
+        .set({'likedAt': FieldValue.serverTimestamp()});
 
     //Add User's like to the post-owner's activity
     if (postOwnerId != currentUserId) {

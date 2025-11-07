@@ -2,16 +2,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/firebase_options.dart';
-import 'package:storygram/launcher/splash_launcher.dart';
-import 'package:storygram/screens/activity_screen.dart';
-import 'package:storygram/screens/forgot_pwd_screen.dart';
-import 'package:storygram/screens/home_screen.dart';
-import 'package:storygram/screens/login_screen.dart';
-import 'package:storygram/screens/main_screen.dart';
-import 'package:storygram/screens/profile_screen.dart';
+import 'package:storygram/core/app_start/splash_launcher.dart';
+import 'package:storygram/features/activities/presentation/activity_screen.dart';
+import 'package:storygram/features/auth/presentation/forgot_pwd_screen.dart';
+import 'package:storygram/features/posts/presentation/home_screen.dart';
+import 'package:storygram/features/auth/presentation/login_screen.dart';
+import 'package:storygram/core/app_shell/main_screen.dart';
+import 'package:storygram/features/profile/presentation/profile_screen.dart';
 import 'package:storygram/screens/search_explore_screen.dart';
-import 'package:storygram/screens/signup_screen.dart';
-import 'package:storygram/themes/app_theme.dart';
+import 'package:storygram/features/auth/presentation/signup_screen.dart';
+import 'package:storygram/core/themes/app_theme.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 

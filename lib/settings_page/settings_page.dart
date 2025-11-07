@@ -106,7 +106,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           isEmailPassSignedIn(currentUser),
                       icon: Icons.info_outline,
                       title: 'Bio',
-                      subTitle: UserBioTextWidget(12, FontWeight.normal),
+                      subTitle: UserBioTextWidget(14, FontWeight.normal),
                       trailingText: 'Edit',
                       onTap: () {
                         setState(() {

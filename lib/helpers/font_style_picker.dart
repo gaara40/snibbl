@@ -44,73 +44,79 @@ Future<String?> showFontStylePicker(
               15,
               kBottomNavigationBarHeight + 5,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  //Header
-                  Row(
-                    children: [
-                      const Icon(Icons.font_download),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Font Style',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //Header
+                Row(
+                  children: [
+                    const Icon(Icons.font_download),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Font Style',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+
+                //Divider
+                TextEditingHelperDivider(),
+
+                // Live preview
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Preview Aa',
+                    style: GoogleFonts.getFont(temp, fontSize: 20),
                   ),
+                ),
 
-                  //Divider
-                  TextEditingHelperDivider(),
+                SizedBox(height: 12),
 
-                  // Live preview
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Preview Aa',
-                      style: GoogleFonts.getFont(temp, fontSize: 20),
+                //Quick presets
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (var font in fontsList)
+                          ChoiceChip(
+                            label: Text(font),
+                            selected: temp == font,
+                            onSelected: (value) => setSheet(() => temp = font),
+                          ),
+                      ],
                     ),
                   ),
+                ),
 
-                  SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-                  //Quick presets
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      for (var font in fontsList)
-                        ChoiceChip(
-                          label: Text(font),
-                          selected: temp == font,
-                          onSelected: (value) => setSheet(() => temp = font),
-                        ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Actions
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed:
-                            () => Navigator.pop(ctx, null), // cancel -> null
-                        child: const Text('Cancel'),
+                // Actions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed:
+                          () => Navigator.pop(ctx, null), // cancel -> null
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(fontSize: 16),
                       ),
-                      const Spacer(),
-                      FilledButton(
-                        onPressed:
-                            () => Navigator.pop(ctx, temp), // return the size
-                        child: const Text('Apply'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    const SizedBox(width: 20),
+                    FilledButton(
+                      onPressed:
+                          () => Navigator.pop(ctx, temp), // return the size
+                      child: const Text('Apply'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         },

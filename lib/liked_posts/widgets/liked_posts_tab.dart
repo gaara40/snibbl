@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:storygram/services/auth_services.dart';
 import 'package:storygram/themes/app_theme.dart';
 import 'package:storygram/widgets/posts_item.dart';
 
@@ -9,15 +9,17 @@ class LikedPostsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
+    final currentUser = AuthServices().currentUserId;
 
-    final likedPostsQuery = FirebaseFirestore.instance
-        .collection('posts')
-        .where('likes', arrayContains: currentUser!.email)
-        .orderBy('createdAt', descending: true);
+    //Liked Posts Stream
+    final likedPostsStream = FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser)
+        .collection('likedPosts')
+        .orderBy('likedAt', descending: true);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: likedPostsQuery.snapshots(),
+      stream: likedPostsStream.snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -35,21 +37,21 @@ class LikedPostsTab extends StatelessWidget {
           );
         }
 
-        final postDocs = snapshot.data!.docs;
+        final likedPostDocs = snapshot.data!.docs;
 
-        for (var doc in postDocs) {
+        for (var doc in likedPostDocs) {
           debugPrint("Liked Post IDs: ${doc.id}");
         }
 
         return ListView.separated(
           itemBuilder: (context, index) {
-            final postId = postDocs[index].id;
+            final postId = likedPostDocs[index].id;
             return PostsItem(onTap: () {}, postId: postId);
           },
           separatorBuilder: (BuildContext context, int index) {
             return Padding(padding: EdgeInsets.all(4));
           },
-          itemCount: postDocs.length,
+          itemCount: likedPostDocs.length,
         );
       },
     );

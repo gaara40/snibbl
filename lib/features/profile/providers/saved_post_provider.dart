@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storygram/core/services/auth_services.dart';
 
 final savedPostProvider = StreamProvider<List<String>>((ref) {
-  final currentUser = FirebaseAuth.instance.currentUser;
+  final currentUser = AuthServices().currentUser;
 
   if (currentUser == null) return const Stream.empty();
 

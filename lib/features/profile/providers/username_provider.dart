@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storygram/core/services/auth_services.dart';
 
 final usernameProvider = StreamProvider<String>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
+  final user = AuthServices().currentUser;
 
   final guestUsername = user?.displayName;
 

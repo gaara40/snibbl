@@ -5,6 +5,8 @@ Future<void> showGuestLoginSheet(BuildContext context) async {
   await showModalBottomSheet(
     context: context,
     useRootNavigator: true,
+    isDismissible: false,
+    enableDrag: false,
     builder: (context) => GuestAuthSheet(),
   );
 }

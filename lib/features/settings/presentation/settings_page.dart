@@ -138,8 +138,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       enabled: isEmailPassSignedIn(currentUser),
                       icon: Icons.lock_outline,
                       title: 'Change Password',
-                      onTap:
-                          () => showChangePasswordDialog(context, currentUser),
+                      onTap: () =>
+                          showChangePasswordDialog(context, currentUser),
                     ),
 
                     //Permanently Delete Account
@@ -175,64 +175,64 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           child:
               //Username Editing Overlay
               _showEditUsername
-                  ? EditOverlay(
-                    key: const ValueKey('edit_username_overlay'),
+              ? EditOverlay(
+                  key: const ValueKey('edit_username_overlay'),
 
-                    onCancelTap: () {
-                      setState(() {
-                        _showEditUsername = false;
-                      });
-                    },
-                    onSave: (value) {
-                      if (value.trim().isEmpty) {
-                        showToast('Username cannot be empty');
-                        return;
-                      }
-                      ref
-                          .read(userServicesProvider)
-                          .updateUsername(currentUserId, value.trim());
-                      showToast('Username Updated Successfully');
-                      debugPrint('Username is saved as: $value');
-                      setState(() {
-                        _showEditUsername = false;
-                      });
-                    },
-                    title: 'Edit Username',
-                    hintText: 'What should we call you?',
-                    labelText: 'New Username',
-                  )
-                  //Bio Editing Overlay
-                  : _showEditBio
-                  ? EditOverlay(
-                    key: const ValueKey('edit_bio_overlay'),
+                  onCancelTap: () {
+                    setState(() {
+                      _showEditUsername = false;
+                    });
+                  },
+                  onSave: (value) {
+                    if (value.trim().isEmpty) {
+                      showToast('Username cannot be empty');
+                      return;
+                    }
+                    ref
+                        .read(userServicesProvider)
+                        .updateUsername(currentUserId, value.trim());
+                    showToast('Username Updated Successfully');
+                    debugPrint('Username is saved as: $value');
+                    setState(() {
+                      _showEditUsername = false;
+                    });
+                  },
+                  title: 'Edit Username',
+                  hintText: 'What should we call you?',
+                  labelText: 'New Username',
+                )
+              //Bio Editing Overlay
+              : _showEditBio
+              ? EditOverlay(
+                  key: const ValueKey('edit_bio_overlay'),
 
-                    isEditBio: true,
+                  isEditBio: true,
 
-                    onCancelTap: () {
-                      setState(() {
-                        _showEditBio = false;
-                      });
-                    },
-                    onSave: (value) {
-                      if (value.trim().isEmpty) {
-                        showToast('Bio cannot be empty');
-                        return;
-                      }
-                      ref
-                          .read(userServicesProvider)
-                          .updateUserBio(currentUserId, value.trim());
-                      showToast('Bio Updated Successfully');
-                      debugPrint('Bio is saved as :$value');
+                  onCancelTap: () {
+                    setState(() {
+                      _showEditBio = false;
+                    });
+                  },
+                  onSave: (value) {
+                    if (value.trim().isEmpty) {
+                      showToast('Bio cannot be empty');
+                      return;
+                    }
+                    ref
+                        .read(userServicesProvider)
+                        .updateUserBio(currentUserId, value.trim());
+                    showToast('Bio Updated Successfully');
+                    debugPrint('Bio is saved as :$value');
 
-                      setState(() {
-                        _showEditBio = false;
-                      });
-                    },
-                    title: 'Edit Bio',
-                    hintText: 'A few words that describe you…',
-                    labelText: 'Your Bio',
-                  )
-                  : const SizedBox.shrink(key: ValueKey('edit_overlay_empty')),
+                    setState(() {
+                      _showEditBio = false;
+                    });
+                  },
+                  title: 'Edit Bio',
+                  hintText: 'A few words that describe you…',
+                  labelText: 'Your Bio',
+                )
+              : const SizedBox.shrink(key: ValueKey('edit_overlay_empty')),
         ),
       ],
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storygram/features/auth/presentation/widgets/guest_auth_sheet.dart';
+import 'package:storygram/features/auth/guest_users/guest_auth_sheet.dart';
 
 Future<void> showGuestLoginSheet(BuildContext context) async {
   await showModalBottomSheet(

@@ -41,6 +41,52 @@ class AuthServices {
     }
   }
 
+  //signup guest user helper to delete any existing guest user
+  Future<void> deleteGuestIfAny() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && user.isAnonymous) {
+      final uid = user.uid;
+
+      // Delete Firestore guest doc (optional)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .delete()
+          .catchError((_) {});
+
+      // Try deleting the anonymous auth account
+      try {
+        await user.delete();
+      } catch (_) {
+        //If token is stale, force sign-out
+        await FirebaseAuth.instance.signOut();
+      }
+    }
+  }
+
+  //signup fresh user with email and password handling guest users
+  Future<UserCredential> signUpGuest(
+    String email,
+    String password,
+    String username,
+  ) async {
+    await deleteGuestIfAny();
+
+    final cred = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    await _firebaseFirestore.collection('users').doc(cred.user!.uid).set({
+      'email': email,
+      'username': username,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    return cred;
+  }
+
   //login with email and password
   Future<UserCredential?> logInWithEmail(String email, String password) async {
     try {
@@ -54,8 +100,65 @@ class AuthServices {
     }
   }
 
-  //Google Sign-in
+  //login with email and password handling guest users
+  Future<UserCredential?> logInWithEmailGuest(
+    String email,
+    String password,
+  ) async {
+    try {
+      final current = _firebaseAuth.currentUser;
+
+      if (current != null && current.isAnonymous) {
+        // Try deleting the anonymous account; if it fails, sign it out
+        try {
+          await current.delete();
+        } catch (e) {
+          debugPrint(
+            'Failed to delete anonymous user before sign-in: $e; signing out instead.',
+          );
+          try {
+            await _firebaseAuth.signOut();
+          } catch (e2) {
+            debugPrint('Failed to sign out anonymous user: $e2');
+          }
+        }
+      }
+
+      final userCred = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      return userCred;
+    } on FirebaseAuthException catch (e) {
+      throw _handleFirebaseLoginError(e);
+    }
+  }
+
   Future<UserCredential> signInWithGoogle() async {
+    // STEP 1 — If user is guest, delete them completely
+    final current = _firebaseAuth.currentUser;
+
+    if (current != null && current.isAnonymous) {
+      try {
+        final guestUid = current.uid;
+
+        // Delete Firestore guest doc (if exists)
+        await _firebaseFirestore
+            .collection('users')
+            .doc(guestUid)
+            .delete()
+            .catchError((_) {});
+
+        // Try deleting guest auth account
+        await current.delete();
+      } catch (e) {
+        debugPrint('Failed to delete guest user: $e');
+        await _firebaseAuth.signOut(); // fallback
+      }
+    }
+
+    // STEP 2 — Begin Google sign-in flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     if (googleUser == null) {
@@ -65,34 +168,28 @@ class AuthServices {
       );
     }
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    final googleAuth = await googleUser.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
+    final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    final UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithCredential(credential);
+    // STEP 3 — Final Google sign-in using fresh state
+    final userCredential = await _firebaseAuth.signInWithCredential(credential);
 
-    final User? user = userCredential.user;
+    // STEP 4 — Create Firestore doc only if new Google user
+    final user = userCredential.user;
 
     if (user != null) {
-      // Reference to Firestore
-      final userDoc = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid);
+      final doc = _firebaseFirestore.collection('users').doc(user.uid);
+      final snap = await doc.get();
 
-      // Check if user already exists in Firestore
-      final docSnapshot = await userDoc.get();
-
-      if (!docSnapshot.exists) {
-        // Create a new document if it doesn't exist
-        await userDoc.set({
+      if (!snap.exists) {
+        await doc.set({
           'uid': user.uid,
           'email': user.email,
-          'username': user.displayName ?? "", // Google display name
+          'username': user.displayName ?? '',
           'createdAt': FieldValue.serverTimestamp(),
         });
       }

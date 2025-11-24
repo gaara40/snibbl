@@ -3,10 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provides the currently authenticated user's username as a reactive stream.
-///
-/// This provider listens to FirebaseAuth.instance.authStateChanges() so it will
-/// automatically update when a user logs out, logs in, or when the auth state
-/// changes. For anonymous users it returns the `displayName` (guest name).
 final usernameProvider = StreamProvider<String>((ref) {
   final auth = FirebaseAuth.instance;
 
@@ -23,10 +19,11 @@ final usernameProvider = StreamProvider<String>((ref) {
     if (user.isAnonymous) {
       // Return a single-value stream from the reload future so the
       // provider emits the up-to-date displayName.
+      final fallback = "guest${user.uid.substring(user.uid.length - 4)}";
       return Stream.fromFuture(
         user.reload().then((_) {
           final current = FirebaseAuth.instance.currentUser;
-          return current?.displayName ?? 'undefined_user';
+          return current?.displayName ?? fallback;
         }),
       );
     }

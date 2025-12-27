@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/core/constants/assets.dart';
@@ -11,8 +12,10 @@ class ActivityScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authServices = ref.read(authServiceProvider);
+    final currentUser = FirebaseAuth.instance.currentUser;
 
     final currentUserId = authServices.currentUserId;
+    final isGuest = currentUser != null && currentUser.isAnonymous;
 
     return Scaffold(
       body: SafeArea(
@@ -31,10 +34,11 @@ class ActivityScreen extends ConsumerWidget {
 
             SizedBox(height: 5),
 
-            Center(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 12.0, 8.0, 4.0),
               child: Text(
                 'Activity',
-                style: theme.textTheme.headlineSmall!.copyWith(fontSize: 15),
+                style: theme.textTheme.headlineSmall!.copyWith(fontSize: 16),
               ),
             ),
 
@@ -47,7 +51,21 @@ class ActivityScreen extends ConsumerWidget {
                   6,
                   kBottomNavigationBarHeight + 4,
                 ),
-                child: ActivityItem(currentUserId),
+                child: isGuest
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            "Sign in to see who's interacting with your Snibbls!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: theme.colorScheme.onSurface.withOpacity(0.7),
+                            ),
+                          ),
+                        ),
+                      )
+                    : ActivityItem(currentUserId),
               ),
             ),
           ],

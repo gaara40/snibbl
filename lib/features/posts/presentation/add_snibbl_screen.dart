@@ -14,6 +14,7 @@ import 'package:storygram/main.dart';
 import 'package:storygram/core/services/upload_post_service.dart';
 import 'package:storygram/core/themes/app_theme.dart';
 import 'package:storygram/global_widgets/app_bar_logo.dart';
+import 'package:storygram/features/auth/guest_users/show_guest_login_sheet.dart';
 
 class AddSnibblScreen extends ConsumerStatefulWidget {
   const AddSnibblScreen({super.key});
@@ -41,6 +42,12 @@ class _AddSnibblScreenState extends ConsumerState<AddSnibblScreen> {
 
   Future<void> onPost() async {
     final user = _firebaseAuth.currentUser;
+
+    // Check if user is anonymous/guest
+    if (user != null && user.isAnonymous) {
+      await showGuestLoginSheet(context);
+      return;
+    }
 
     final postText = _postTextontroller.text.trim();
 

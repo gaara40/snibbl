@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storygram/core/helpers/handle_firebase_login_error.dart';
 import 'package:storygram/core/helpers/toasts.dart';
 import 'package:storygram/features/auth/providers/auth_providers.dart';
 import 'package:storygram/main.dart';
@@ -32,14 +34,12 @@ Future<void> handleEmailPassLogin({
         (route) => false,
       );
     }
-  } catch (e) {
-    //catch firebase errors
-    if (context.mounted) {
-      final errorMessage = e is Exception
-          ? e.toString().replaceFirst('Exception: ', '')
-          : e.toString();
+  } on FirebaseAuthException catch (e) {
+    debugPrint('Firebase error code: ${e.code}');
+    final exception = handleFirebaseLoginError(e);
 
-      showToast(errorMessage);
+    if (context.mounted) {
+      showToast(exception.toString().replaceFirst('Exception: ', ''));
     }
   } finally {
     onEnd();
@@ -74,12 +74,12 @@ Future<void> handleEmailPassSignup({
         (route) => false,
       );
     }
-  } catch (e) {
+  } on FirebaseAuthException catch (e) {
+    debugPrint('Firebase error code: ${e.code}');
+    final exception = handleFirebaseLoginError(e);
+
     if (context.mounted) {
-      final errorMessage = e is Exception
-          ? e.toString().replaceFirst('Exception: ', '')
-          : e.toString();
-      showToast(errorMessage);
+      showToast(exception.toString().replaceFirst('Exception: ', ''));
     }
   } finally {
     onEnd();

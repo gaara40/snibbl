@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,30 +9,41 @@ Future<void> handleGoogleUserAccountDeletion(
   BuildContext context,
   User user,
 ) async {
+  final GoogleSignIn googleSignIn = GoogleSignIn.instance;
   try {
     //Start Google Sign-In flow to reauthenticate//
+    final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
 
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    if (googleUser == null) {
+      showToast('Google sign-in cancelled. Account deletion aborted.');
+      return;
+    }
 
-    // Sign-in Silently or ask for sign-in if required
-    GoogleSignInAccount? googleUser =
-        await googleSignIn.signInSilently() ?? await googleSignIn.signIn();
-
-    final googleAuth = await googleUser?.authentication;
+    final googleAuth = await googleUser.authentication;
 
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
+      idToken: googleAuth.idToken,
     );
 
     //Reauthenticate user
     await user.reauthenticateWithCredential(credential);
 
-    //Delete Firebase user account
+    final uid = user.uid;
+
+    //Delete Firestore user document
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    } catch (e) {
+      debugPrint('Firestore cleanup failed: $e');
+    }
+
+    //Delete Firebase Auth user
     await user.delete();
 
-    //Sign out from both Google & Firebase
-    await GoogleSignIn().signOut();
+    //Revoke Google access
+    await googleSignIn.disconnect();
+
+    //Clear Firebase session
     await FirebaseAuth.instance.signOut();
 
     //Navigate back to login screen

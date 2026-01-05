@@ -88,10 +88,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       //catch firebase errors
       if (mounted) {
-        final errorMessage =
-            e is Exception
-                ? e.toString().replaceFirst('Exception: ', '')
-                : e.toString();
+        final errorMessage = e is Exception
+            ? e.toString().replaceFirst('Exception: ', '')
+            : e.toString();
 
         showToast(errorMessage);
       }
@@ -249,13 +248,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     SocialLoginButton(
                       logoAssetPath: AppAssets.googleLogo,
                       onTap: () async {
-                        final googleUserCred =
-                            await ref
-                                .read(authServiceProvider)
-                                .signInWithGoogle();
+                        final googleUserCred = await ref
+                            .read(authServiceProvider)
+                            .signInWithGoogle();
 
                         final displayName =
-                            googleUserCred.user?.displayName ?? 'User';
+                            googleUserCred?.displayName ?? 'User';
 
                         navigatorKey.currentState!.pushNamedAndRemoveUntil(
                           '/mainScreen',
@@ -284,13 +282,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               duration: const Duration(milliseconds: 500),
               switchInCurve: Curves.easeIn,
               switchOutCurve: Curves.easeOut,
-              child:
-                  _guestLoading
-                      ? const LoadingOverlay(
-                        key: ValueKey('overlay'),
-                        message: 'Signing in as a guest...',
-                      )
-                      : const SizedBox.shrink(key: ValueKey('overlay-empty')),
+              child: _guestLoading
+                  ? const LoadingOverlay(
+                      key: ValueKey('overlay'),
+                      message: 'Signing in as a guest...',
+                    )
+                  : const SizedBox.shrink(key: ValueKey('overlay-empty')),
             ),
           ),
         ],

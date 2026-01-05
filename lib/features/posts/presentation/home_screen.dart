@@ -23,7 +23,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             //LOGO
             const AppBarLogo(),
 
-            SizedBox(height: 10),
+            SizedBox(height: 15),
 
             Expanded(
               //FEED
@@ -35,11 +35,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   kBottomNavigationBarHeight + 4,
                 ),
                 child: StreamBuilder(
-                  stream:
-                      FirebaseFirestore.instance
-                          .collection('posts')
-                          .orderBy('createdAt', descending: true)
-                          .snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .orderBy('createdAt', descending: true)
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

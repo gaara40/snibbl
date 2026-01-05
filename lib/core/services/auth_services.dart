@@ -136,7 +136,7 @@ class AuthServices {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<User?> signInWithGoogle() async {
     // STEP 1 — If user is guest, delete them completely
     final current = _firebaseAuth.currentUser;
 
@@ -160,7 +160,13 @@ class AuthServices {
     }
 
     // STEP 2 — Begin Google sign-in flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    await GoogleSignIn.instance.initialize(
+      serverClientId:
+          '585648107348-qm1h823amdfe00mlf39a2tursrfgbu4d.apps.googleusercontent.com',
+    );
+
+    final GoogleSignInAccount? googleUser = await GoogleSignIn.instance
+        .authenticate();
 
     if (googleUser == null) {
       throw FirebaseAuthException(
@@ -169,10 +175,10 @@ class AuthServices {
       );
     }
 
-    final googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
@@ -196,7 +202,7 @@ class AuthServices {
       }
     }
 
-    return userCredential;
+    return user;
   }
 
   //reset password
@@ -220,7 +226,7 @@ class AuthServices {
       }
 
       await _firebaseAuth.signOut();
-      await GoogleSignIn().signOut();
+      await GoogleSignIn.instance.signOut();
     } catch (e) {
       debugPrint('Error during sign out: $e');
     }
@@ -253,4 +259,3 @@ class AuthServices {
 }
 
 //handle exception errors
-

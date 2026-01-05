@@ -122,10 +122,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ProfilePostsTabItem(
                     label: "My Snibbls",
                     isSelected: selectedIndexTab == 0,
-                    onTap:
-                        () => setState(() {
-                          selectedIndexTab = 0;
-                        }),
+                    onTap: () => setState(() {
+                      selectedIndexTab = 0;
+                    }),
                   ),
 
                   SizedBox(width: 5),
@@ -134,10 +133,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ProfilePostsTabItem(
                     label: "Liked ",
                     isSelected: selectedIndexTab == 1,
-                    onTap:
-                        () => setState(() {
-                          selectedIndexTab = 1;
-                        }),
+                    onTap: () => setState(() {
+                      selectedIndexTab = 1;
+                    }),
                   ),
 
                   SizedBox(width: 5),
@@ -146,10 +144,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ProfilePostsTabItem(
                     label: "Saved",
                     isSelected: selectedIndexTab == 2,
-                    onTap:
-                        () => setState(() {
-                          selectedIndexTab = 2;
-                        }),
+                    onTap: () => setState(() {
+                      selectedIndexTab = 2;
+                    }),
                   ),
                 ],
               ),
@@ -166,12 +163,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   6,
                   kBottomNavigationBarHeight + 4,
                 ),
-                child:
-                    selectedIndexTab == 0
-                        ? const MySnibblsTab()
-                        : selectedIndexTab == 1
-                        ? const LikedPostsTab()
-                        : const SavedPostsTab(),
+                child: selectedIndexTab == 0
+                    ? const MySnibblsTab()
+                    : selectedIndexTab == 1
+                    ? const LikedPostsTab()
+                    : const SavedPostsTab(),
               ),
             ),
           ],

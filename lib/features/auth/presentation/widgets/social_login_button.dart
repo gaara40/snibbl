@@ -18,7 +18,7 @@ class SocialLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: isLoading
-          ? CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : Container(
               height: 50,
               decoration: BoxDecoration(

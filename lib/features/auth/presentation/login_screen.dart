@@ -248,17 +248,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                     //google signin
                     SocialLoginButton(
-                      isLoading: isGoogleLoading,
                       logoAssetPath: AppAssets.googleLogo,
+                      isLoading: isGoogleLoading,
                       onTap: () {
                         handleGoogleSignIn(
                           context: context,
                           ref: ref,
                           onStart: () {
-                            setState(() => _loading = true);
+                            setState(() => isGoogleLoading = true);
                           },
                           onEnd: () {
-                            setState(() => _loading = false);
+                            setState(() => isGoogleLoading = false);
                           },
                         );
                       },

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storygram/features/auth/helpers/auth_handlers.dart';
 import 'package:storygram/features/auth/presentation/widgets/continue_as_guest_btn.dart';
 import 'package:storygram/features/auth/presentation/widgets/email_text_field.dart';
 import 'package:storygram/features/auth/presentation/widgets/forgot_password_btn.dart';
@@ -29,6 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _loading = false;
   bool _guestLoading = false;
+  bool isGoogleLoading = false;
 
   AuthServices get _authServices => ref.read(authServiceProvider);
 
@@ -246,21 +248,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                     //google signin
                     SocialLoginButton(
+                      isLoading: isGoogleLoading,
                       logoAssetPath: AppAssets.googleLogo,
-                      onTap: () async {
-                        final googleUserCred = await ref
-                            .read(authServiceProvider)
-                            .signInWithGoogle();
-
-                        final displayName =
-                            googleUserCred?.displayName ?? 'User';
-
-                        navigatorKey.currentState!.pushNamedAndRemoveUntil(
-                          '/mainScreen',
-                          (route) => false,
+                      onTap: () {
+                        handleGoogleSignIn(
+                          context: context,
+                          ref: ref,
+                          onStart: () {
+                            setState(() => _loading = true);
+                          },
+                          onEnd: () {
+                            setState(() => _loading = false);
+                          },
                         );
-                        if (!mounted) return;
-                        showToast('Welcome $displayName');
                       },
                     ),
 

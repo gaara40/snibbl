@@ -42,37 +42,13 @@ class AuthServices {
     }
   }
 
-  //signup guest user helper to delete any existing guest user
-  Future<void> deleteGuestIfAny() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null && user.isAnonymous) {
-      final uid = user.uid;
-
-      // Delete Firestore guest doc (optional)
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .delete()
-          .catchError((_) {});
-
-      // Try deleting the anonymous auth account
-      try {
-        await user.delete();
-      } catch (_) {
-        //If token is stale, force sign-out
-        await FirebaseAuth.instance.signOut();
-      }
-    }
-  }
-
   //signup fresh user with email and password handling guest users
   Future<UserCredential> signUpGuest(
     String email,
     String password,
     String username,
   ) async {
-    await deleteGuestIfAny();
+    // await deleteGuestIfAny();
 
     final cred = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
@@ -107,24 +83,6 @@ class AuthServices {
     String password,
   ) async {
     try {
-      final current = _firebaseAuth.currentUser;
-
-      if (current != null && current.isAnonymous) {
-        // Try deleting the anonymous account; if it fails, sign it out
-        try {
-          await current.delete();
-        } catch (e) {
-          debugPrint(
-            'Failed to delete anonymous user before sign-in: $e; signing out instead.',
-          );
-          try {
-            await _firebaseAuth.signOut();
-          } catch (e2) {
-            debugPrint('Failed to sign out anonymous user: $e2');
-          }
-        }
-      }
-
       final userCred = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -132,77 +90,59 @@ class AuthServices {
 
       return userCred;
     } on FirebaseAuthException catch (e) {
-      throw handleFirebaseLoginError(e);
+      debugPrint('Firebase error code: ${e.code}');
+      rethrow;
     }
   }
 
+  //Google sign-in
   Future<User?> signInWithGoogle() async {
-    // STEP 1 — If user is guest, delete them completely
-    final current = _firebaseAuth.currentUser;
-
-    if (current != null && current.isAnonymous) {
-      try {
-        final guestUid = current.uid;
-
-        // Delete Firestore guest doc (if exists)
-        await _firebaseFirestore
-            .collection('users')
-            .doc(guestUid)
-            .delete()
-            .catchError((_) {});
-
-        // Try deleting guest auth account
-        await current.delete();
-      } catch (e) {
-        debugPrint('Failed to delete guest user: $e');
-        await _firebaseAuth.signOut(); // fallback
-      }
-    }
-
-    // STEP 2 — Begin Google sign-in flow
-    await GoogleSignIn.instance.initialize(
-      serverClientId:
-          '585648107348-qm1h823amdfe00mlf39a2tursrfgbu4d.apps.googleusercontent.com',
-    );
-
-    final GoogleSignInAccount? googleUser = await GoogleSignIn.instance
-        .authenticate();
-
-    if (googleUser == null) {
-      throw FirebaseAuthException(
-        code: 'ERROR_ABORTED_BY_USER',
-        message: 'Sign in aborted by user',
+    try {
+      // STEP 1 - Initialize Google Sign-In
+      await GoogleSignIn.instance.initialize(
+        serverClientId:
+            '585648107348-qm1h823amdfe00mlf39a2tursrfgbu4d.apps.googleusercontent.com',
       );
-    }
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+      // STEP 2 - Begin Google sign-in flow
+      final googleUser = await GoogleSignIn.instance.authenticate();
 
-    final credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-    );
+      final googleAuth = googleUser.authentication;
 
-    // STEP 3 — Final Google sign-in using fresh state
-    final userCredential = await _firebaseAuth.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
 
-    // STEP 4 — Create Firestore doc only if new Google user
-    final user = userCredential.user;
+      // STEP 3 - Final Google sign-in using fresh state
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
 
-    if (user != null) {
-      final doc = _firebaseFirestore.collection('users').doc(user.uid);
-      final snap = await doc.get();
+      // STEP 4 - Create Firestore doc only if new Google user
+      final user = userCredential.user;
 
-      if (!snap.exists) {
-        await doc.set({
-          'uid': user.uid,
-          'email': user.email,
-          'username': user.displayName ?? '',
-          'createdAt': FieldValue.serverTimestamp(),
-        });
+      if (user != null) {
+        final doc = _firebaseFirestore.collection('users').doc(user.uid);
+        final snap = await doc.get();
+
+        if (!snap.exists) {
+          await doc.set({
+            'uid': user.uid,
+            'email': user.email,
+            'username': user.displayName ?? '',
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        }
       }
-    }
 
-    return user;
+      return user;
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        debugPrint('Google sign-in canceled by user');
+        return null;
+      }
+      rethrow;
+    }
   }
 
   //reset password

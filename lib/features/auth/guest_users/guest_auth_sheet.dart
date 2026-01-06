@@ -2,8 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storygram/core/constants/assets.dart';
-import 'package:storygram/core/helpers/toasts.dart';
-import 'package:storygram/features/auth/helpers/handle_email_pass_login.dart';
+import 'package:storygram/features/auth/helpers/auth_handlers.dart';
 import 'package:storygram/features/auth/presentation/widgets/email_text_field.dart';
 import 'package:storygram/features/auth/presentation/widgets/loading_button.dart';
 import 'package:storygram/features/auth/presentation/widgets/password_text_field.dart';
@@ -18,8 +17,10 @@ class GuestAuthSheet extends ConsumerStatefulWidget {
 }
 
 class _GuestAuthSheetState extends ConsumerState<GuestAuthSheet> {
+  final _formKey = GlobalKey<FormState>();
   bool obscurePassword = true;
-  bool isLoading = false;
+  bool isLoginLoading = false;
+  bool isGoogleLoading = false;
   bool isLogin = false;
 
   // Controllers
@@ -68,56 +69,66 @@ class _GuestAuthSheetState extends ConsumerState<GuestAuthSheet> {
                 const SizedBox(height: 25),
 
                 // Email Field
-                EmailTextField(controller: emailController),
-                const SizedBox(height: 10),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      EmailTextField(controller: emailController),
 
-                // Password Field
-                PasswordTextField(
-                  controller: passwordController,
-                  obscureText: obscurePassword,
-                  toggleVisibility: togglePassword,
-                ),
-                const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                // Username (only for signup)
-                if (!isLogin) ...[
-                  UsernameTextField(controller: usernameController),
-                  const SizedBox(height: 10),
-                ],
+                      // Password Field
+                      PasswordTextField(
+                        controller: passwordController,
+                        obscureText: obscurePassword,
+                        toggleVisibility: togglePassword,
+                      ),
+                      const SizedBox(height: 10),
 
-                SizedBox(height: isLogin ? 15 : 0),
-                // Signup / Login Button
-                LoadingButton(
-                  text: isLogin ? 'Login' : 'Signup',
-                  onPressed: () {
-                    isLogin
-                        ? handleEmailPassLogin(
-                            context: context,
-                            ref: ref,
-                            email: emailController.text.trim(),
-                            password: passwordController.text.trim(),
-                            onStart: () {
-                              setState(() => isLoading = true);
-                            },
-                            onEnd: () {
-                              setState(() => isLoading = false);
-                            },
-                          )
-                        : handleEmailPassSignup(
-                            context: context,
-                            ref: ref,
-                            email: emailController.text.trim(),
-                            password: passwordController.text.trim(),
-                            username: usernameController.text.trim(),
-                            onStart: () {
-                              setState(() => isLoading = true);
-                            },
-                            onEnd: () {
-                              setState(() => isLoading = false);
-                            },
-                          );
-                  },
-                  loading: isLoading,
+                      // Username (only for signup)
+                      if (!isLogin) ...[
+                        UsernameTextField(controller: usernameController),
+                        const SizedBox(height: 10),
+                      ],
+
+                      SizedBox(height: isLogin ? 15 : 0),
+                      // Signup / Login Button
+                      LoadingButton(
+                        text: isLogin ? 'Login' : 'Signup',
+                        onPressed: () {
+                          isLogin
+                              ? handleEmailLogin(
+                                  context: context,
+                                  ref: ref,
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                  onStart: () {
+                                    setState(() => isLoginLoading = true);
+                                  },
+                                  onEnd: () {
+                                    setState(() => isLoginLoading = false);
+                                  },
+                                  formKey: _formKey,
+                                )
+                              : handleEmailSignup(
+                                  context: context,
+                                  ref: ref,
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                  username: usernameController.text.trim(),
+                                  onStart: () {
+                                    setState(() => isLoginLoading = true);
+                                  },
+                                  onEnd: () {
+                                    setState(() => isLoginLoading = false);
+                                  },
+                                  formKey: _formKey,
+                                );
+                        },
+                        loading: isLoginLoading,
+                      ),
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: 15),
@@ -125,7 +136,42 @@ class _GuestAuthSheetState extends ConsumerState<GuestAuthSheet> {
                 // Google sign-in
                 SocialLoginButton(
                   logoAssetPath: AppAssets.googleLogo,
-                  onTap: () => showToast('Google sign-in coming soon!'),
+                  isLoading: isGoogleLoading,
+                  onTap: () {
+                    handleGoogleSignIn(
+                      context: context,
+                      ref: ref,
+                      onStart: () {
+                        setState(() => isGoogleLoading = true);
+                      },
+                      onEnd: () {
+                        setState(() => isGoogleLoading = false);
+                      },
+                    );
+                  },
+                  // onTap: () async {
+                  //   final googleUserCred = await ref
+                  //       .read(authServiceProvider)
+                  //       .signInWithGoogle();
+
+                  //   if (googleUserCred == null) {
+                  //     //User cancelled sign-in
+                  //     return;
+                  //   } else {
+                  //     if (!mounted) return;
+                  //     navigatorKey.currentState!.pushNamedAndRemoveUntil(
+                  //       '/mainScreen',
+                  //       (route) => false,
+                  //     );
+                  //     // Using a safe fallback for display name
+                  //     final name = googleUserCred.displayName;
+                  //     showToast(
+                  //       name != null && name.isNotEmpty
+                  //           ? 'Welcome $name!'
+                  //           : 'Welcome to Snibbl!',
+                  //     );
+                  //   }
+                  // },
                 ),
 
                 const SizedBox(height: 25),
@@ -147,6 +193,15 @@ class _GuestAuthSheetState extends ConsumerState<GuestAuthSheet> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
+                            // Reset form and toggle
+                            _formKey.currentState?.reset();
+
+                            // Clear the inputs
+                            emailController.clear();
+                            passwordController.clear();
+                            if (!isLogin) usernameController.clear();
+
+                            // Toggle state
                             setState(() => isLogin = !isLogin);
                           },
                       ),
